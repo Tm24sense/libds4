@@ -22,10 +22,9 @@ int ds4_btn_pressed(ds4_state *state, DS4_Buttons btn)
     }
 }
 
-
 uint8_t ds4_get_temprature(ds4_state* state)
 {
-
+    return state->Temprature;
 }
 
 ds4_point ds4_left_stick(ds4_state* state)

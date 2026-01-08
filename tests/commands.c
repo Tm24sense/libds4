@@ -1,5 +1,5 @@
 #include <libds4/ds4.h>
-
+//vibrates controller at max strenght and change led to red and keep flashing it
 
 int main()
 {

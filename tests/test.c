@@ -1,35 +1,24 @@
 #include <libds4/ds4.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <stdbool.h>
 int main()
 {
-    ds4_handle *handle = ds4_make_handle();
-    if (!handle) {
-        fprintf(stderr, "No controller found; exiting.\n");
-        return 1;
-    }
-    ds4_state previous_state = {0};
-
-    while (true)
+    ds4_handle *device = ds4_make_handle();
+    int running = 1;
+    while (running)
     {
-        ds4_input_report input_report = ds4_read_ireport(handle);
-        ds4_state current_state = ds4_parse_state(&input_report);
 
-        // Check rising edges for buttons
-        if (ds4_btn_pressed(&current_state, DS_BTN_Square) &&
-            !ds4_btn_pressed(&previous_state, DS_BTN_Square))
+        ds4_state state = ds4_input_poll(device);
+        if(ds4_btn_pressed(&state, DS_BTN_Circle))
         {
-            printf("Square pressed!\n");
-            break; // exit if desired
+            printf("Circle button has been pressed!!!\n");
+            ds4_destroy_handle(device);
+            running = false;
         }
-
-        if (ds4_btn_pressed(&current_state, DS_BTN_Cross) &&
-            !ds4_btn_pressed(&previous_state, DS_BTN_Cross))
+        else if(ds4_btn_pressed(&state, DS_BTN_Share))
         {
-            printf("Cross pressed!\n");
+                printf("Share button has been pressed\n");
+                ds4_destroy_handle(device);
+                running = false;
         }
-        previous_state = current_state;
-
     }
 }

@@ -25,7 +25,7 @@ target_link_libraries(ds4 PRIVATE hidapi::hidapi hidapi::libusb)
 
 
 add_executable(ds4_test
-    tests/commands.c
+    tests/test.c
 )
 
 target_link_libraries(ds4_test PRIVATE ds4)

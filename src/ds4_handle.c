@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <stdio.h>
-#include <hidapi/hidapi.h> // assuming you’re using hidapi
+#include <hidapi/hidapi.h>
 
 ds4_handle *ds4_make_handle(void)
 {
