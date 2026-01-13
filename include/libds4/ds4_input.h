@@ -4,7 +4,7 @@
 #include <memory.h>
 #include <stdint.h>
 
-/* Forward declaration */
+
 typedef struct ds4_handle ds4_handle;
 
 #define DS4_REPORT_HEADER_INPUT 0x01
@@ -69,7 +69,7 @@ typedef struct ds4_state {
 
     int16_t gyroX;
     int16_t gyroY;
-    int16_t gyroZ;
+    int16_t gyroZ; // add this later
     int16_t accelX;
     int16_t accelY;
     int16_t accelZ;

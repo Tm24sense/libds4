@@ -3,14 +3,13 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <stdio.h>
-#include <hidapi/hidapi.h>
+#include "hidapi.h"
 
 ds4_handle *ds4_make_handle(void)
 {
     int PID = ds4_scan_devices();
     if (PID == 0)
     {
-        printf("[ERROR] Could Not find a device please connnect the controller\n");
         return NULL;
     }
     wchar_t wstr[512];

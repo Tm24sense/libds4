@@ -4,11 +4,11 @@
 #include "ds4_output.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include <hidapi/hidapi.h>
+#include "hidapi.h"
 
 typedef struct ds4_handle
 {
-    hid_device *handle;
+    hid_device *handle; 
     int pid;
     wchar_t *serial_number;
     int vid;

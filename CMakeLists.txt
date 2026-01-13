@@ -21,13 +21,10 @@ target_include_directories(ds4
         ${PROJECT_SOURCE_DIR}/src       
 )
 
-target_link_libraries(ds4 PRIVATE hidapi::hidapi hidapi::libusb)
+target_link_libraries(ds4 PUBLIC hidapi::hidapi)
 
 
 add_executable(ds4_test
-    tests/test.c
+    tests/commands.c
 )
-
 target_link_libraries(ds4_test PRIVATE ds4)
-
-target_include_directories(ds4_test PRIVATE ${HIDAPI_INCLUDE_DIRS})
