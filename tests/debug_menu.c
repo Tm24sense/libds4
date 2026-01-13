@@ -1,6 +1,5 @@
 #include <libds4/ds4.h>
 #include <stdio.h>
-#include <unistd.h>
 int main()
 {
     ds4_handle *handle = ds4_make_handle();
