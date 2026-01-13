@@ -5,7 +5,7 @@ find_package(hidapi CONFIG REQUIRED)
 
 
 
-add_library(ds4 SHARED
+add_library(ds4 STATIC
     src/ds4_identify.c
     src/ds4_handle.c
     src/ds4_output.c
