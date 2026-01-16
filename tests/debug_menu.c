@@ -1,39 +1,44 @@
-#include <libds4/ds4.h>
 #include <stdio.h>
-int main()
+#include <wchar.h>
+#include <libds4/ds4.h>
+
+int main(void)
 {
     ds4_handle *handle = ds4_make_handle();
-
-    while (1)
-    {
-        ds4_input_report input_report = ds4_read_ireport(handle);
-        ds4_state state = ds4_parse_state(&input_report);
-
-        
-        printf("\033[H\033[J");
-
-        printf("--- DualShock 4 Debug ---\n");
-        printf("Battery Level: %d/11\n", state.battery_level);
-        printf("Status: %s %s\n",
-               state.is_plugged ? "[WIRED]" : "[WIRELESS]",
-               state.battery_level ? "(CHARGING...)" : "");
-        printf("Controller temprature: %d\n", state.Temprature);
-        printf("HeadPhones present: %d\n", state.headphones);
-        printf("D-Pad State: %d\n", state.dpad_state);
-        printf("is square pressed:     %d\n", state.faceButtons);
-        printf("Ps button:  %d\n", state.PS_Button);
-        printf("Options:    %d\n", state.Option);
-        printf("share:      %d\n", state.Share);
-        printf("L3 Stick:    X: %3d  Y: %3d\n", state.leftstickX, state.leftstickY);
-        printf("R3 Stick:    X: %3d  Y: %3d\n", state.rightstickX, state.rightstickY);
-        printf("R2 pressed: %d\n", state.R2);
-        printf("L2 pressed: %d\n", state.L2);
-        printf("R3 pressed: %d\n", state.R3);
-        printf("TouchPad pressed: %d\n", state.TouchPad_click);
-        printf("R2_Analog: %d\n", state.r2analog);
-        printf("L2_Analog: %d\n", state.l2analog);
-        printf("packet counter: %d\n", state.packet_counter);
+    if (!handle) {
+        fprintf(stderr, "Error: Failed to initialize DS4 handle\n");
+        return 1;
     }
 
-    wprintf(L"%ls\n", handle->serial_number);
+    ds4_state state;
+    while (1) {
+        state = ds4_input_poll(handle);
+
+        printf("\033[H\033[J");
+        printf("--- DualShock 4 Debug ---\n");
+        printf("Battery Level: %.1f%%\n", ds4_battery_level_percentage(&state));
+        printf("Controller Temperature: %d\n", ds4_get_temperature(&state));
+        printf("Headphones Present: %d\n", ds4_headphones_present(&state));
+        printf("D-Pad State: %d\n", state.dpad_state);
+        printf("Square Pressed: %d\n", ds4_btn_state(&state));
+        printf("PS Button: %d\n", state.PS_Button);
+        printf("Options: %d\n", state.Option);
+        printf("Share: %d\n", state.Share);
+
+        ds4_point leftstick = ds4_left_stick(&state);
+        ds4_point rightstick = ds4_right_stick(&state);
+        printf("L3 Stick: X: %3d  Y: %3d\n", leftstick.x, leftstick.y);
+        printf("R3 Stick: X: %3d  Y: %3d\n", rightstick.x, rightstick.y);
+
+        printf("R2 Pressed: %d\n", state.R2);
+        printf("L2 Pressed: %d\n", state.L2);
+        printf("R3 Pressed: %d\n", state.R3);
+        printf("TouchPad Pressed: %d\n", state.TouchPad_click);
+        printf("R2 Analog: %d\n", state.r2analog);
+        printf("L2 Analog: %d\n", state.l2analog);
+        printf("Packet Counter: %d\n", state.packet_counter);
+    }
+
+    ds4_destroy_handle(handle);
+    return 0;
 }

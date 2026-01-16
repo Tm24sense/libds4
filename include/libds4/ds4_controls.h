@@ -1,7 +1,6 @@
 #pragma once
 #include <stdint.h>
 
-
 typedef struct ds4_state ds4_state;
 
 #define DS4_SQUARE (1 << 4)   // 16
@@ -33,6 +32,10 @@ typedef struct ds4_point
 
 int ds4_btn_pressed(ds4_state *state, DS4_Buttons btn);
 int ds4_btn_released(ds4_state *state, DS4_Buttons btn);
-uint8_t ds4_get_temperature(ds4_state* state);
+int ds4_headphones_present(ds4_state *state);
+int ds4_btn_state(ds4_state *state);
+uint8_t ds4_battery_level(ds4_state *state);
+float ds4_battery_level_percentage(ds4_state *state);
+uint8_t ds4_get_temperature(ds4_state *state);
 ds4_point ds4_left_stick(ds4_state *state);
 ds4_point ds4_right_stick(ds4_state *state);

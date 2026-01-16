@@ -1,10 +1,10 @@
 #pragma once
-#include "ds4_identify.h"
-#include "ds4_input.h"
-#include "ds4_output.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "hidapi.h"
+#include <hidapi.h>
+#include <libds4/ds4_identify.h>
+#include <libds4/ds4_input.h>
+#include <libds4/ds4_output.h>
 
 typedef struct ds4_handle
 {
