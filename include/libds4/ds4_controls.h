@@ -30,8 +30,9 @@ typedef struct ds4_point
     uint8_t x, y;
 } ds4_point;
 
-int ds4_btn_pressed(ds4_state *state, DS4_Buttons btn);
-int ds4_btn_released(ds4_state *state, DS4_Buttons btn);
+// THIS ONLY WORKS FOR FACE BUTTONS X, O, TRIANGLE, AND SQUARE
+int ds4_button_pressed(ds4_state *state, DS4_Buttons btn);
+int ds4_buttons_pressed(ds4_state *state, const uint8_t *buttons, int count);
 int ds4_headphones_present(ds4_state *state);
 int ds4_btn_state(ds4_state *state);
 uint8_t ds4_battery_level(ds4_state *state);

@@ -74,7 +74,7 @@ typedef struct ds4_state {
     int16_t accelZ;
 } ds4_state;
 
-ds4_state ds4_input_poll(ds4_handle* handle);
+ds4_state ds4_update(ds4_handle* handle);
 
 ds4_input_report ds4_read_ireport(ds4_handle *dev);
 

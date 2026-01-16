@@ -14,6 +14,7 @@ typedef struct ds4_output_report
 
 } ds4_output_report;
 
+
 typedef struct ds4_message
 {
     ds4_output_report hid_report;
@@ -29,4 +30,3 @@ void ds4_send_commands(ds4_handle *dev, ds4_message *message);
 void ds4_set_led(ds4_message *_r, int r, int g, int b);
 
 void ds4_flush_report(ds4_handle *dev, ds4_message *data);
-

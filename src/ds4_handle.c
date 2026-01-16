@@ -4,7 +4,7 @@
 #include <hidapi.h>
 #include <libds4/ds4_handle.h>
 
-ds4_handle *ds4_make_handle(void)
+ds4_handle *ds4_open_device(void)
 {
     int PID = ds4_scan_devices();
     if (PID == 0) {

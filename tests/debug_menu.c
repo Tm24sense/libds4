@@ -4,7 +4,7 @@
 
 int main(void)
 {
-    ds4_handle *handle = ds4_make_handle();
+    ds4_handle *handle = ds4_open_device();
     if (!handle) {
         fprintf(stderr, "Error: Failed to initialize DS4 handle\n");
         return 1;
@@ -12,7 +12,7 @@ int main(void)
 
     ds4_state state;
     while (1) {
-        state = ds4_input_poll(handle);
+        state = ds4_update(handle);
 
         printf("\033[H\033[J");
         printf("--- DualShock 4 Debug ---\n");

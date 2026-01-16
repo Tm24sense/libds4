@@ -2,7 +2,7 @@
 #include <stdio.h>
 int main()
 {
-    ds4_handle *device = ds4_make_handle();
+    ds4_handle *device = ds4_open_device();
     ds4_message message = ds4_begin_message();
     int stren;
     int r, g,b;

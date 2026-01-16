@@ -1,9 +1,10 @@
 #include <libds4/ds4_controls.h>
 #include <libds4/ds4_input.h>
 
-int ds4_btn_pressed(ds4_state *state, DS4_Buttons btn)
+int ds4_button_pressed(ds4_state *state, DS4_Buttons btn)
 {
-    switch (btn) {
+    switch (btn)
+    {
     case DS_BTN_Square:
         return !!(state->faceButtons & DS4_SQUARE);
     case DS_BTN_Cross:
@@ -44,10 +45,22 @@ ds4_point ds4_left_stick(ds4_state *state)
 {
     return (ds4_point){
         .x = state->leftstickX,
-        .y = state->leftstickY
-    };
+        .y = state->leftstickY};
 }
 
+
+int ds4_buttons_pressed(ds4_state *state, const uint8_t* buttons, int count)
+{
+    int mask = buttons[0];
+    for (int i = 0; i < count; i++)
+    {
+        mask |= buttons[i];
+    }
+    if ((state->faceButtons & mask) == mask)
+        return 1;
+    else
+        return 0;
+}
 int ds4_btn_state(ds4_state *state)
 {
     return state->faceButtons;
@@ -72,6 +85,6 @@ ds4_point ds4_right_stick(ds4_state *state)
 {
     return (ds4_point){
         .x = state->rightstickX,
-        .y = state->rightstickY
-    };
+        .y = state->rightstickY};
 }
+

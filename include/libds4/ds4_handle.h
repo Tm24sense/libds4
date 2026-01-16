@@ -20,5 +20,5 @@ typedef struct ds4_handle
 
 } ds4_handle;
 
-ds4_handle *ds4_make_handle(void);
+ds4_handle *ds4_open_device(void);
 void ds4_destroy_handle(ds4_handle *handle);

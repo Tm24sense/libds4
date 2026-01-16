@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <libds4/ds4_output.h>
 #include <libds4/ds4_handle.h>
+#include <libds4/ds4_time.h>
 
 ds4_output_report ds4_create_oreport(void)
 {
@@ -19,12 +20,13 @@ ds4_output_report ds4_create_oreport(void)
 
     return _r;
 }
-
 void ds4_set_vibration(ds4_message *_r, uint8_t right_motor, uint8_t left_motor)
 {
     _r->hid_report.report[4] = right_motor;
     _r->hid_report.report[5] = left_motor;
 }
+
+
 
 void ds4_set_led(ds4_message *_r, int r, int g, int b)
 {
@@ -44,7 +46,8 @@ ds4_message ds4_begin_message(void)
 void ds4_flush_report(ds4_handle *dev, ds4_message *data)
 {
     int res = hid_write(dev->handle, data->hid_report.report, DS4_OUTPUT_REPORT_SIZE);
-    if (res < 0) {
+    if (res < 0)
+    {
         fprintf(stderr, "[ERROR] Failed to write to DS4 device\n");
     }
 }
@@ -56,10 +59,13 @@ void ds4_send_commands(ds4_handle *dev, ds4_message *message)
 
 void ds4_enable_flash(ds4_message *out_report, uint8_t flash_on, uint8_t flash_off, bool on)
 {
-    if (on) {
+    if (on)
+    {
         out_report->hid_report.report[9] = flash_on;
         out_report->hid_report.report[10] = flash_off;
-    } else {
+    }
+    else
+    {
         out_report->hid_report.report[9] = 0x00;
         out_report->hid_report.report[10] = 0x00;
     }

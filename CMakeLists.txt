@@ -19,6 +19,6 @@ target_include_directories(ds4
 target_link_libraries(ds4 PUBLIC hidapi::hidapi)
 
 add_executable(ds4_test
-    tests/debug_menu.c
+    tests/test.c
 )
 target_link_libraries(ds4_test PRIVATE ds4)

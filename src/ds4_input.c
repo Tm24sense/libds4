@@ -9,7 +9,7 @@ ds4_input_report ds4_read_ireport(ds4_handle *dev)
     return _rep;
 }
 
-ds4_state ds4_input_poll(ds4_handle *handle)
+ds4_state ds4_update(ds4_handle *handle)
 {
     ds4_input_report input_report = ds4_read_ireport(handle);
     ds4_state state = ds4_parse_state(&input_report);
