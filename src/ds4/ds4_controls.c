@@ -1,5 +1,5 @@
-#include <libds4/ds4_controls.h>
-#include <libds4/ds4_input.h>
+#include <ds4/ds4_controls.h>
+#include <ds4/ds4_input.h>
 
 int ds4_button_pressed(ds4_state *state, DS4_Buttons btn)
 {

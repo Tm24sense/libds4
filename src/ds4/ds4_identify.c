@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <hidapi.h>
-#include <libds4/ds4_identify.h>
-#include <libds4/ds4_handle.h>
+#include <ds4/ds4_identify.h>
+#include <ds4/ds4_handle.h>
 
 ds4_device_type pid_to_ds4_model(unsigned short pid)
 {

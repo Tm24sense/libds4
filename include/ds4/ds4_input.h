@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <memory.h>
 #include <stdint.h>
-#include <libds4/ds4_models.h>
+#include <ds4/ds4_models.h>
 
 typedef struct ds4_handle ds4_handle;
 

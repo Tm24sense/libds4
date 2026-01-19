@@ -1,8 +1,8 @@
 #include <memory.h>
 #include <stdio.h>
-#include <libds4/ds4_output.h>
-#include <libds4/ds4_handle.h>
-#include <libds4/ds4_time.h>
+#include <ds4/ds4_output.h>
+#include <ds4/ds4_handle.h>
+#include <ds4/ds4_time.h>
 
 ds4_output_report ds4_create_oreport(void)
 {

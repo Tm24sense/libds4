@@ -1,4 +1,4 @@
-#include <libds4/ds4.h>
+#include <ds4/ds4.h>
 #include <stdio.h>
 int main()
 {
