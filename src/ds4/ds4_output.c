@@ -42,18 +42,21 @@ ds4_message ds4_begin_message(void)
     return message;
 }
 
-void ds4_flush_report(ds4_handle *dev, ds4_message *data)
+int ds4_flush_report(ds4_handle *dev, ds4_message *data)
 {
     int res = hid_write(dev->handle, data->hid_report.report, DS4_OUTPUT_REPORT_SIZE);
     if (res < 0)
     {
-        fprintf(stderr, "[ERROR] Failed to write to DS4 device\n");
+        return 0;
     }
 }
 
-void ds4_send_commands(ds4_handle *dev, ds4_message *message)
+int ds4_send_commands(ds4_handle *dev, ds4_message *message)
 {
-    ds4_flush_report(dev, message);
+    if(!ds4_flush_report(dev, message))
+    {
+        return 0;
+    }
 }
 
 void ds4_enable_flash(ds4_message *out_report, uint8_t flash_on, uint8_t flash_off, bool on)

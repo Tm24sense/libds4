@@ -1,6 +1,5 @@
 #include <ds4pp/Device.hpp>
 #include <stdexcept>
-#include <iostream>
 
 using namespace std::chrono_literals;
 
@@ -40,10 +39,27 @@ void DS4::DualShock4::EndRumble()
     this->output.hid_report.report[4] = 0x00;
     this->output.hid_report.report[5] = 0x00;
 }
+uint8_t DS4::DualShock4::GetBatteryLevel()
+{
+    ds4_battery_level(&this->state);
+}
+
+std::tuple<int16_t, int16_t, int16_t> DS4::DualShock4::GetGyroData()
+{
+    ds4_motion_t gyro_data = ds4_gyro_query(&this->state);
+    return {gyro_data.x, gyro_data.y, gyro_data.z};
+}
+std::tuple<int16_t, int16_t, int16_t> DS4::DualShock4::GetAccelData()
+{
+    ds4_motion_t accel_data = ds4_accel_query(&this->state);
+    return {accel_data.x, accel_data.y, accel_data.z};
+}
 void DS4::DualShock4::SetLed(uint8_t r, uint8_t g, uint8_t b)
 {
     ds4_set_led(&this->output, r, g, b);
 }
+
+
 
 void DS4::DualShock4::EnableFlash(bool enabled)
 {
@@ -61,7 +77,10 @@ void DS4::DualShock4::SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff
 }
 void DS4::DualShock4::SendCommandBuffer()
 {
-    ds4_send_commands(handle, &this->output);
+    if (!ds4_send_commands(handle, &this->output))
+    {
+        throw std::runtime_error("Device removed or disconnected could not send buffer to device");
+    }
 }
 
 bool DS4::DualShock4::IsButtonPressed(DS4_Buttons Button)
@@ -83,7 +102,6 @@ bool DS4::DualShock4::AreButtonsPressed(std::vector<DS4_Buttons> &Buttons)
                 return false;
             break;
 
-        
         case DS_BTN_L1:
             if (!state.L1)
                 return false;
@@ -120,22 +138,53 @@ bool DS4::DualShock4::AreButtonsPressed(std::vector<DS4_Buttons> &Buttons)
             if (!state.TouchPad_click)
                 return false;
             break;
-
+        case DS_DPAD_NORTH:
+            if (state.dpad_state != DS_DPAD_NORTH)
+                return false;
+            break;
+        case DS_DPAD_NORTH_EAST:
+            if (state.dpad_state != DS_DPAD_NORTH_EAST)
+                return false;
+            break;
+        case DS_DPAD_EAST:
+            if (state.dpad_state != DS_DPAD_EAST)
+                return false;
+            break;
+        case DS_DPAD_SOUTH_EAST:
+            if (state.dpad_state != DS_DPAD_SOUTH_EAST)
+                return false;
+            break;
+        case DS_DPAD_SOUTH:
+            if (state.dpad_state != DS_DPAD_SOUTH)
+                return false;
+            break;
+        case DS_DPAD_SOUTH_WEST:
+            if (state.dpad_state != DS_DPAD_SOUTH_WEST)
+                return false;
+            break;
+        case DS_DPAD_WEST:
+            if (state.dpad_state != DS_DPAD_WEST)
+                return false;
+            break;
+        case DS_DPAD_NORTH_WEST:
+            if (state.dpad_state != DS_DPAD_NORTH_WEST)
+                return false;
+            break;
         case DS_BTN_None:
-            return false; 
+            return false;
+            break;
         }
     }
 
-    return true; 
+    return true;
 }
 void DS4::DualShock4::Update()
 {
-    if(IsTimeEnd())
+    if (IsTimeEnd())
     {
         this->EndRumble();
     }
     this->state = ds4_update(handle);
-    
 }
 bool DS4::DualShock4::IsTimeEnd()
 {

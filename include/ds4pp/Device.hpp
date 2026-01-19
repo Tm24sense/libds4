@@ -5,6 +5,7 @@ extern "C"
 }
 #include <vector>
 #include <chrono>
+#include <tuple>
 namespace DS4
 {
     class DualShock4
@@ -15,6 +16,9 @@ namespace DS4
         void Connect();
         void Rumble(uint8_t RightMotor, uint8_t LeftMotor, std::chrono::duration<double> duration);
         void EndRumble();
+        uint8_t GetBatteryLevel();
+        std::tuple<int16_t, int16_t, int16_t> GetGyroData();
+        std::tuple<int16_t, int16_t, int16_t> GetAccelData();
         void SetLed(uint8_t r, uint8_t g, uint8_t b);
         void EnableFlash(bool enabled);
         bool IsFlashEnabled();

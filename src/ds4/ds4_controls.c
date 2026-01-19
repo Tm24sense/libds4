@@ -48,8 +48,7 @@ ds4_point ds4_left_stick(ds4_state *state)
         .y = state->leftstickY};
 }
 
-
-int ds4_buttons_pressed(ds4_state *state,  DS4_Buttons* buttons, int count)
+int ds4_buttons_pressed(ds4_state *state, DS4_Buttons *buttons, int count)
 {
     int mask = buttons[0];
     for (int i = 0; i < count; i++)
@@ -66,6 +65,24 @@ int ds4_btn_state(ds4_state *state)
     return state->faceButtons;
 }
 
+ds4_motion_t ds4_gyro_query(ds4_state *state)
+{
+    return (ds4_motion_t){
+        .x = state->gyroX,
+        .y = state->gyroY,
+        .z = state->gyroZ};
+}
+ds4_motion_t ds4_accel_query(ds4_state *state)
+{
+    return (ds4_motion_t){
+        .x = state->accelX,
+        .y = state->accelY,
+        .z = state->accelZ};
+}
+int ds4_microphone_present(ds4_state *state)
+{
+    return state->microphone;
+}
 uint8_t ds4_battery_level(ds4_state *state)
 {
     return state->battery_level;
@@ -87,4 +104,3 @@ ds4_point ds4_right_stick(ds4_state *state)
         .x = state->rightstickX,
         .y = state->rightstickY};
 }
-

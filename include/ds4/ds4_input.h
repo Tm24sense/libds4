@@ -38,7 +38,7 @@ typedef struct ds4_state {
     uint8_t rightstickX;
     uint8_t rightstickY;
 
-    DS4_DPAD dpad_state;// byte 5
+    int dpad_state;// byte 5
     uint8_t faceButtons; // bits 4-7 of byte 5
     // Buttons from byte 6
     
@@ -52,26 +52,26 @@ typedef struct ds4_state {
     bool PS_Button, TouchPad_click;
     uint8_t packet_counter;
 
+    //byte 8-9
     uint8_t l2analog;
     uint8_t r2analog;
-
+    //Byte 12
     uint8_t Temprature;
-
-    uint8_t timestamp_low;
-    uint8_t timestamp_mid;
-    uint8_t timestamp_high;
-
-
-    uint8_t battery_level;
-    bool is_plugged;
-    bool headphones;
-
+    // Bytes 13-24
     int16_t gyroX;
     int16_t gyroY;
     int16_t gyroZ; // add this later
     int16_t accelX;
     int16_t accelY;
     int16_t accelZ;
+
+    //byte 30
+    int microphone;
+    uint8_t battery_level;
+    bool is_plugged;
+    bool headphones;
+
+    
 } ds4_state;
 
 ds4_state ds4_update(ds4_handle* handle);
