@@ -30,7 +30,7 @@ ds4_handle *ds4_open_device(void)
 
     handle->handle = dev;
     handle->pid = PID;
-    handle->serial_number = wcscmp(wstr);
+    handle->serial_number = wcsdup(wstr);
     handle->vid = SONY_VENDOR_ID;
     handle->dev_type = pid_to_ds4_model(PID);
 
