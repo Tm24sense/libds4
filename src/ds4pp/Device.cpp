@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <iostream>
 
+using namespace std::chrono_literals;
+
 DS4::DualShock4::DualShock4()
 {
     this->handle = nullptr;
@@ -25,11 +27,19 @@ void DS4::DualShock4::Connect()
         ds4_destroy_handle(handle);
     }
 }
-void DS4::DualShock4::Rumble(uint8_t RightMotor, uint8_t LeftMotor)
+void DS4::DualShock4::Rumble(uint8_t RightMotor, uint8_t LeftMotor, std::chrono::duration<double> duration)
 {
+    this->clock_end = std::chrono::high_resolution_clock::now() +
+                      std::chrono::duration_cast<std::chrono::high_resolution_clock::duration>(duration);
+
     ds4_set_vibration(&this->output, RightMotor, LeftMotor);
 }
 
+void DS4::DualShock4::EndRumble()
+{
+    this->output.hid_report.report[4] = 0x00;
+    this->output.hid_report.report[5] = 0x00;
+}
 void DS4::DualShock4::SetLed(uint8_t r, uint8_t g, uint8_t b)
 {
     ds4_set_led(&this->output, r, g, b);
@@ -65,7 +75,6 @@ bool DS4::DualShock4::AreButtonsPressed(std::vector<DS4_Buttons> &Buttons)
     {
         switch (b)
         {
-        // faceButtons (bitmask)
         case DS_BTN_Square:
         case DS_BTN_Cross:
         case DS_BTN_Circle:
@@ -74,52 +83,65 @@ bool DS4::DualShock4::AreButtonsPressed(std::vector<DS4_Buttons> &Buttons)
                 return false;
             break;
 
-        // other buttons
+        
         case DS_BTN_L1:
-            if (!DS_BTN_L1)
+            if (!state.L1)
                 return false;
             break;
         case DS_BTN_R1:
-            if (!DS_BTN_R1)
+            if (!state.R1)
                 return false;
             break;
         case DS_BTN_L2:
-            if (!DS_BTN_L2)
+            if (!state.L2)
                 return false;
             break;
         case DS_BTN_R2:
-            if (!DS_BTN_R2)
+            if (!state.R2)
                 return false;
             break;
         case DS_BTN_Share:
-            if (!DS_BTN_Share)
+            if (!state.Share)
                 return false;
             break;
         case DS_BTN_Option:
-            if (!DS_BTN_Option)
+            if (!state.Option)
                 return false;
             break;
         case DS_BTN_L3:
-            if (!DS_BTN_L3)
+            if (!state.L3)
                 return false;
             break;
         case DS_BTN_R3:
-            if (!DS_BTN_R3)
+            if (!state.R3)
                 return false;
             break;
         case DS_BTN_TouchPad:
-            if (!DS_BTN_TouchPad)
+            if (!state.TouchPad_click)
                 return false;
             break;
 
         case DS_BTN_None:
-            return false; // optional
+            return false; 
         }
     }
 
-    return true; // all buttons pressed
+    return true; 
 }
 void DS4::DualShock4::Update()
 {
+    if(IsTimeEnd())
+    {
+        this->EndRumble();
+    }
     this->state = ds4_update(handle);
+    
+}
+bool DS4::DualShock4::IsTimeEnd()
+{
+    if (this->clock_end <= std::chrono::high_resolution_clock::now())
+    {
+        return true;
+    }
+    return false;
 }

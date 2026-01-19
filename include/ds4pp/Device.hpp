@@ -4,6 +4,7 @@ extern "C"
 #include <ds4/ds4.h>
 }
 #include <vector>
+#include <chrono>
 namespace DS4
 {
     class DualShock4
@@ -12,7 +13,8 @@ namespace DS4
         DualShock4();
         ~DualShock4();
         void Connect();
-        void Rumble(uint8_t RightMotor, uint8_t LeftMotor);
+        void Rumble(uint8_t RightMotor, uint8_t LeftMotor, std::chrono::duration<double> duration);
+        void EndRumble();
         void SetLed(uint8_t r, uint8_t g, uint8_t b);
         void EnableFlash(bool enabled);
         bool IsFlashEnabled();
@@ -23,7 +25,11 @@ namespace DS4
         void Update();
 
     private:
+        bool IsTimeEnd();
         ds4_handle *handle;
+        std::chrono::milliseconds TargetDuration;
+        std::chrono::high_resolution_clock::time_point clock_end;
+        uint64_t RumbleTime;
         bool flash_enabled;
         ds4_state state;
         ds4_message output;
