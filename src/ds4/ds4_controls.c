@@ -49,7 +49,7 @@ ds4_point ds4_left_stick(ds4_state *state)
 }
 
 
-int ds4_buttons_pressed(ds4_state *state, const uint8_t* buttons, int count)
+int ds4_buttons_pressed(ds4_state *state,  DS4_Buttons* buttons, int count)
 {
     int mask = buttons[0];
     for (int i = 0; i < count; i++)

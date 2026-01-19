@@ -1,39 +1,31 @@
+#pragma once
 extern "C"
 {
-    #include <ds4/ds4.h>
+#include <ds4/ds4.h>
 }
-
-enum class Button
-{
-    SQUARE = 16,
-    CROSS = 32,
-    CIRCLE = 64,
-    TRIANGLE = 128,
-    L1,
-    R1,
-    L2,
-    R2,
-    Share,
-    Option,
-    L3,
-    R3,
-    Touchpad,
-    None
-};
-
-
+#include <vector>
 namespace DS4
 {
     class DualShock4
     {
-        public:
-            DualShock4();
-            ~DualShock4();
-            bool IsButtonPressed(DS4_Buttons Button);
-            void Update();
-            
-        private:
-            ds4_handle* handle;
-            ds4_state state;
+    public:
+        DualShock4();
+        ~DualShock4();
+        void Connect();
+        void Rumble(uint8_t RightMotor, uint8_t LeftMotor);
+        void SetLed(uint8_t r, uint8_t g, uint8_t b);
+        void EnableFlash(bool enabled);
+        bool IsFlashEnabled();
+        void SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff);
+        void SendCommandBuffer();
+        bool IsButtonPressed(DS4_Buttons Button);
+        bool AreButtonsPressed(std::vector<DS4_Buttons>& Buttons);
+        void Update();
+
+    private:
+        ds4_handle *handle;
+        bool flash_enabled;
+        ds4_state state;
+        ds4_message output;
     };
 };

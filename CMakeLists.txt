@@ -29,5 +29,5 @@ target_include_directories(ds4pp PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(ds4pp PUBLIC ds4)
 
 
-add_executable(ds4_test tests/debug_menu.c)
-target_link_libraries(ds4_test PRIVATE ds4)
+add_executable(ds4_test tests/cpp_test.cpp)
+target_link_libraries(ds4_test PRIVATE ds4pp)

@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <ds4/ds4_output.h>
 #include <ds4/ds4_handle.h>
-#include <ds4/ds4_time.h>
 
 ds4_output_report ds4_create_oreport(void)
 {
