@@ -1,7 +1,15 @@
 #pragma once
+
+#ifdef _WIN32
+#include <hidapi/hidapi.h>
+#else
+#include "hidapi.h"
+#endif
+
+
 #include <stdint.h>
 #include <stdbool.h>
-#include "hidapi.h"
+
 #include <ds4/ds4_identify.h>
 #include <ds4/ds4_input.h>
 #include <ds4/ds4_output.h>
