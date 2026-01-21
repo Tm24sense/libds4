@@ -15,7 +15,10 @@ add_library(ds4 STATIC
 )
 
 
-target_include_directories(ds4 PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(ds4 PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 target_link_libraries(ds4 PUBLIC hidapi::hidapi)
 
 #cpp wrapper
@@ -23,7 +26,10 @@ add_library(ds4pp STATIC
     src/ds4pp/Device.cpp
 )
 
-target_include_directories(ds4pp PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(ds4pp PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
 
 target_link_libraries(ds4pp PUBLIC ds4)
