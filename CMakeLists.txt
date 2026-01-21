@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.15)
 project(libds4 LANGUAGES C CXX)
 
 
-
 find_package(hidapi CONFIG REQUIRED)
 
 
@@ -14,14 +13,13 @@ add_library(ds4 STATIC
     src/ds4/ds4_controls.c
 )
 
-
 target_include_directories(ds4 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 target_link_libraries(ds4 PUBLIC hidapi::hidapi)
 
-#cpp wrapper
+
 add_library(ds4pp STATIC
     src/ds4pp/Device.cpp
 )
@@ -30,13 +28,11 @@ target_include_directories(ds4pp PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
-
-
 target_link_libraries(ds4pp PUBLIC ds4)
+
 
 include(GNUInstallDirs)
 
-# Install the library binaries
 install(TARGETS ds4 ds4pp
     EXPORT libds4-targets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -44,14 +40,23 @@ install(TARGETS ds4 ds4pp
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-# Install headers
+
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-# Generate and install the Config file so find_package() works
-install(EXPORT libds4-targets
-    NAMESPACE libds4::
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libds4-config.cmake"
+"include(CMakeFindDependencyMacro)
+find_dependency(hidapi)
+include(\"\${CMAKE_CURRENT_LIST_DIR}/libds4-targets.cmake\")
+")
+
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libds4-config.cmake"
     DESTINATION share/libds4
 )
 
-#add_executable(ds4_test tests/cpp_test.cpp)
-#target_link_libraries(ds4_test PRIVATE ds4pp)
+install(EXPORT libds4-targets
+    FILE libds4-targets.cmake
+    NAMESPACE libds4::
+    DESTINATION share/libds4
+)
