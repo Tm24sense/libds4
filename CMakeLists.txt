@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libraries")
 
+# 1. Find the package
 find_package(hidapi CONFIG REQUIRED)
 
 add_library(ds4 STATIC
@@ -19,11 +20,21 @@ add_library(ds4 STATIC
     src/ds4/ds4_input.c
     src/ds4/ds4_controls.c
 )
-target_include_directories(ds4 PUBLIC
+
+# 2. Fix the include path without get_target_property
+# We link the library first, then tell CMake to look inside the 'hidapi' subfolder
+target_link_libraries(ds4 PUBLIC hidapi::hidapi)
+
+# This adds the /hidapi subfolder to the search path specifically for this target
+target_include_directories(ds4 PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
-target_link_libraries(ds4 PUBLIC hidapi::hidapi)
+
+# This is the magic part: it finds the actual path of hidapi::hidapi and appends /hidapi
+target_include_directories(ds4 PUBLIC 
+    $<TARGET_PROPERTY:hidapi::hidapi,INTERFACE_INCLUDE_DIRECTORIES>/hidapi
+)
 
 add_library(ds4pp STATIC src/ds4pp/Device.cpp)
 target_include_directories(ds4pp PUBLIC
