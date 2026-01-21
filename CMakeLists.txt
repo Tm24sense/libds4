@@ -12,7 +12,6 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libraries")
 
 find_package(hidapi CONFIG REQUIRED)
 
-# --- Library: ds4 ---
 add_library(ds4 STATIC
     src/ds4/ds4_identify.c
     src/ds4/ds4_handle.c
@@ -21,15 +20,16 @@ add_library(ds4 STATIC
     src/ds4/ds4_controls.c
 )
 
-# Standard vcpkg includes
 target_include_directories(ds4 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
+# This line is the fix for the "Cannot open include file: 'hidapi/hidapi.h'" error
+target_include_directories(ds4 SYSTEM PRIVATE "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
+
 target_link_libraries(ds4 PUBLIC hidapi::hidapi)
 
-# --- Library: ds4pp ---
 add_library(ds4pp STATIC src/ds4pp/Device.cpp)
 target_include_directories(ds4pp PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -37,13 +37,11 @@ target_include_directories(ds4pp PUBLIC
 )
 target_link_libraries(ds4pp PUBLIC ds4)
 
-# --- Local Testing ---
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     add_executable(ds4_test tests/cpp_test.cpp)
     target_link_libraries(ds4_test PRIVATE ds4pp)
 endif()
 
-# --- Installation ---
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
