@@ -1,42 +1,44 @@
 cmake_minimum_required(VERSION 3.15)
-project(libds4 LANGUAGES C CXX)
+
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND DEFINED ENV{VCPKG_ROOT})
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "" FORCE)
+endif()
+
+project(libds4 VERSION 1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libraries")
+
 find_package(hidapi CONFIG REQUIRED)
 
-
-add_library(ds4 SHARED
+add_library(ds4 STATIC
     src/ds4/ds4_identify.c
     src/ds4/ds4_handle.c
     src/ds4/ds4_output.c
     src/ds4/ds4_input.c
     src/ds4/ds4_controls.c
 )
-target_include_directories(ds4 PUBLIC 
+target_include_directories(ds4 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 target_link_libraries(ds4 PUBLIC hidapi::hidapi)
 
-
-add_library(ds4pp SHARED src/ds4pp/Device.cpp)
-target_include_directories(ds4pp PUBLIC 
+add_library(ds4pp STATIC src/ds4pp/Device.cpp)
+target_include_directories(ds4pp PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 target_link_libraries(ds4pp PUBLIC ds4)
 
-#when im testing
-if(PROJECT_IS_TOP_LEVEL)
-    message(STATUS "libds4: Developer mode enabled. Building tests...")
-    
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     add_executable(ds4_test tests/cpp_test.cpp)
     target_link_libraries(ds4_test PRIVATE ds4pp)
 endif()
 
-
 include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
 install(TARGETS ds4 ds4pp
     EXPORT libds4-targets
@@ -46,14 +48,21 @@ install(TARGETS ds4 ds4pp
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/libds4-config-version.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libds4-config.cmake"
 "include(CMakeFindDependencyMacro)
-find_dependency(hidapi)
+find_dependency(hidapi CONFIG)
 include(\"\${CMAKE_CURRENT_LIST_DIR}/libds4-targets.cmake\")
 ")
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libds4-config.cmake"
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/libds4-config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/libds4-config-version.cmake"
     DESTINATION share/libds4
 )
 
