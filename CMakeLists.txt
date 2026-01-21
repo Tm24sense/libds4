@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(hidapi CONFIG REQUIRED)
 
 
-add_library(ds4 STATIC
+add_library(ds4 SHARED
     src/ds4/ds4_identify.c
     src/ds4/ds4_handle.c
     src/ds4/ds4_output.c
@@ -20,7 +20,7 @@ target_include_directories(ds4 PUBLIC
 target_link_libraries(ds4 PUBLIC hidapi::hidapi)
 
 
-add_library(ds4pp STATIC src/ds4pp/Device.cpp)
+add_library(ds4pp SHARED src/ds4pp/Device.cpp)
 target_include_directories(ds4pp PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
