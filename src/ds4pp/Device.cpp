@@ -41,7 +41,7 @@ void DS4::DualShock4::EndRumble()
 }
 uint8_t DS4::DualShock4::GetBatteryLevel()
 {
-    ds4_battery_level(&this->state);
+    return (ds4_battery_level(&this->state));
 }
 
 std::tuple<int16_t, int16_t, int16_t> DS4::DualShock4::GetGyroData()
