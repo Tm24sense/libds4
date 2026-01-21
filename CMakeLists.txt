@@ -20,13 +20,14 @@ add_library(ds4 STATIC
     src/ds4/ds4_controls.c
 )
 
+# This is the "Brute Force" fix. 
+# It tells the compiler to look in the base vcpkg include folder.
+# This makes #include <hidapi/hidapi.h> work 100% of the time.
 target_include_directories(ds4 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include>
     $<INSTALL_INTERFACE:include>
 )
-
-# This line is the fix for the "Cannot open include file: 'hidapi/hidapi.h'" error
-target_include_directories(ds4 SYSTEM PRIVATE "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
 
 target_link_libraries(ds4 PUBLIC hidapi::hidapi)
 
