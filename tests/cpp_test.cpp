@@ -1,22 +1,33 @@
-#include <ds4pp/Device.hpp>
+#include <chrono>
+#include <thread>
 #include <iostream>
-
-using namespace std::chrono_literals;
-int main()
+#include <ds4pp/Device.hpp>
+int main() 
 {
     DS4::DualShock4 device;
     device.Connect();
 
-    std::vector<DS4_Buttons> buttons = {DS_BTN_R2, DS_BTN_L2, DS_DPAD_EAST};
-    while (true)
+    // Target 250Hz (4ms per update)
+    const int targetHz = 250;
+    const std::chrono::milliseconds frameDuration(1000 / targetHz);
+
+    while (true) 
     {
-        std::cout << "\033[H\033[J";
+        auto start = std::chrono::steady_clock::now();
+
         device.Update();
-
+        
+        // Output data
         auto [x, y, z] = device.GetAccelData();
-
-        std::cout << "x: " << x << " y: " << y << " z: " << z << "\n";
+        std::cout << "\rX: " << x << " Y: " << y << " Z: " << z << std::flush;
 
         device.SendCommandBuffer();
+
+        // Calculate how long to sleep to maintain the rate
+        auto end = std::chrono::steady_clock::now();
+        auto elapsed = end - start;
+        if (elapsed < frameDuration) {
+            std::this_thread::sleep_for(frameDuration - elapsed);
+        }
     }
 }
