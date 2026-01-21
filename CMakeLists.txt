@@ -20,10 +20,13 @@ add_library(ds4 STATIC
     src/ds4/ds4_input.c
     src/ds4/ds4_controls.c
 )
+
+# Standard vcpkg includes
 target_include_directories(ds4 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
+
 target_link_libraries(ds4 PUBLIC hidapi::hidapi)
 
 # --- Library: ds4pp ---
