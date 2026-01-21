@@ -59,8 +59,6 @@ void DS4::DualShock4::SetLed(uint8_t r, uint8_t g, uint8_t b)
     ds4_set_led(&this->output, r, g, b);
 }
 
-
-
 void DS4::DualShock4::EnableFlash(bool enabled)
 {
     this->flash_enabled = enabled;
