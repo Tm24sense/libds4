@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <stdio.h>
-#include <hidapi.h>
+#include <ds4/hidapi_macro.h>
 #include <ds4/ds4_handle.h>
 
 ds4_handle *ds4_open_device(void)

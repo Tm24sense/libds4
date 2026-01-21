@@ -1,10 +1,6 @@
 #pragma once
 
-#ifdef _WIN32
-#include <hidapi/hidapi.h>
-#else
-#include "hidapi.h"
-#endif
+#include <ds4/hidapi_macro.h>
 
 
 #include <stdint.h>
