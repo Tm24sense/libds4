@@ -17,7 +17,7 @@ int main()
         
         // Output data
         auto [x, y, z] = device.GetAccelData();
-        std::cout << "\rX: " << x << " Y: " << y << " Z: " << z << std::flush;
+        std::cout << "\rX: " << (int)x << " Y: " << (int)y << " Z: " << (int)z << std::flush;
 
         device.SendCommandBuffer();
     }
