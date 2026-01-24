@@ -3,7 +3,7 @@ project(libds4 VERSION 1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+set(BUILD_SHARED_LIBS OFF)
 
 if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/cmake/CPM.cmake")
     file(DOWNLOAD
@@ -36,10 +36,11 @@ target_link_libraries(ds4 PUBLIC hidapi::hidapi)
 add_library(ds4pp STATIC src/ds4pp/Device.cpp)
 
 target_include_directories(ds4pp PUBLIC include)
-target_link_libraries(ds4pp PUBLIC ds4)
+target_link_libraries(ds4pp PRIVATE ds4)
 
 option(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)
+    message("Building test examples")
     add_executable(ds4_test tests/cpp_test.cpp)
     target_link_libraries(ds4_test PRIVATE ds4pp)
 endif()
