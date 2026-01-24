@@ -49,6 +49,7 @@ int ds4_flush_report(ds4_handle *dev, ds4_message *data)
     {
         return 0;
     }
+    return 1;
 }
 
 int ds4_send_commands(ds4_handle *dev, ds4_message *message)
@@ -57,6 +58,7 @@ int ds4_send_commands(ds4_handle *dev, ds4_message *message)
     {
         return 0;
     }
+    return 1;
 }
 
 void ds4_enable_flash(ds4_message *out_report, uint8_t flash_on, uint8_t flash_off, bool on)

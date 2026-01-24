@@ -1,16 +1,26 @@
-cmake_minimum_required(VERSION 3.15)
-
-if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND DEFINED ENV{VCPKG_ROOT})
-    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "" FORCE)
-endif()
-
+cmake_minimum_required(VERSION 3.21)
 project(libds4 VERSION 1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libraries")
+set(BUILD_SHARED_LIBS OFF)
 
-find_package(hidapi CONFIG REQUIRED)
+if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/cmake/CPM.cmake")
+    file(DOWNLOAD
+        "https://github.com/cpm-cmake/CPM.cmake/releases/latest/download/get_cpm.cmake"
+        "${CMAKE_CURRENT_LIST_DIR}/cmake/CPM.cmake"
+        SHOW_PROGRESS
+    )
+endif()
+include(cmake/CPM.cmake)
+
+
+CPMAddPackage(
+    NAME hidapi
+    GITHUB_REPOSITORY libusb/hidapi
+    GIT_TAG master
+    OPTIONS "HIDAPI_BUILD_TESTS OFF" "HIDAPI_SHARED OFF"
+)
 
 add_library(ds4 STATIC
     src/ds4/ds4_identify.c
@@ -19,61 +29,19 @@ add_library(ds4 STATIC
     src/ds4/ds4_input.c
     src/ds4/ds4_controls.c
 )
-
-# This is the "Brute Force" fix. 
-# It tells the compiler to look in the base vcpkg include folder.
-# This makes #include <hidapi/hidapi.h> work 100% of the time.
-target_include_directories(ds4 PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include>
-    $<INSTALL_INTERFACE:include>
-)
-
+target_include_directories(ds4 PUBLIC include)
 target_link_libraries(ds4 PUBLIC hidapi::hidapi)
 
-add_library(ds4pp STATIC src/ds4pp/Device.cpp)
-target_include_directories(ds4pp PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-)
-target_link_libraries(ds4pp PUBLIC ds4)
 
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+add_library(ds4pp STATIC src/ds4pp/Device.cpp)
+
+target_include_directories(ds4pp PUBLIC include)
+target_link_libraries(ds4pp PRIVATE ds4)
+
+option(BUILD_TESTS "Build tests" OFF)
+if(BUILD_TESTS)
+    message("Building test examples")
     add_executable(ds4_test tests/cpp_test.cpp)
     target_link_libraries(ds4_test PRIVATE ds4pp)
 endif()
 
-include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
-
-install(TARGETS ds4 ds4pp
-    EXPORT libds4-targets
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
-
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
-write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/libds4-config-version.cmake"
-    VERSION ${PROJECT_VERSION}
-    COMPATIBILITY AnyNewerVersion
-)
-
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libds4-config.cmake"
-"include(CMakeFindDependencyMacro)
-find_dependency(hidapi CONFIG)
-include(\"\${CMAKE_CURRENT_LIST_DIR}/libds4-targets.cmake\")
-")
-
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/libds4-config.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/libds4-config-version.cmake"
-    DESTINATION share/libds4
-)
-
-install(EXPORT libds4-targets
-    FILE libds4-targets.cmake
-    NAMESPACE libds4::
-    DESTINATION share/libds4
-)

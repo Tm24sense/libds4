@@ -4,8 +4,10 @@ extern "C"
 #include <ds4/ds4.h>
 }
 #include <vector>
+#include <ds4pp/Input.hpp>
 #include <chrono>
 #include <tuple>
+
 namespace DS4
 {
     class DualShock4
@@ -17,6 +19,7 @@ namespace DS4
         void Rumble(uint8_t RightMotor, uint8_t LeftMotor, std::chrono::duration<double> duration);
         void EndRumble();
         uint8_t GetBatteryLevel();
+
         std::tuple<int16_t, int16_t, int16_t> GetGyroData();
         std::tuple<int16_t, int16_t, int16_t> GetAccelData();
         void SetLed(uint8_t r, uint8_t g, uint8_t b);
@@ -24,8 +27,8 @@ namespace DS4
         bool IsFlashEnabled();
         void SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff);
         void SendCommandBuffer();
-        bool IsButtonPressed(DS4_Buttons Button);
-        bool AreButtonsPressed(std::vector<DS4_Buttons>& Buttons);
+        bool IsButtonPressed(ControllerButton Button);
+        bool AreButtonsPressed(std::vector<ControllerButton> &Buttons);
         void Update();
 
     private:
