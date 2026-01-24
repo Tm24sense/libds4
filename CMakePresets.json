@@ -21,7 +21,6 @@
     {
       "name": "windows-vs",
       "displayName": "Windows + Visual Studio",
-      "generator": "Visual Studio 17 2022",
       "binaryDir": "${sourceDir}/build/",
       "condition": {
         "type": "equals",
