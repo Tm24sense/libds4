@@ -3,7 +3,6 @@ project(libds4 VERSION 1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-option(USE_VCPKG "Use vcpkg instead of CPM for dependencies" OFF)
 
 
 if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/cmake/CPM.cmake")
@@ -35,9 +34,13 @@ target_link_libraries(ds4 PUBLIC hidapi::hidapi)
 
 
 add_library(ds4pp STATIC src/ds4pp/Device.cpp)
+
 target_include_directories(ds4pp PUBLIC include)
 target_link_libraries(ds4pp PUBLIC ds4)
 
+option(BUILD_TESTS "Build tests" OFF)
+if(BUILD_TESTS)
+    add_executable(ds4_test tests/cpp_test.cpp)
+    target_link_libraries(ds4_test PRIVATE ds4pp)
+endif()
 
-add_executable(ds4_test tests/cpp_test.cpp)
-target_link_libraries(ds4_test PRIVATE ds4pp)
