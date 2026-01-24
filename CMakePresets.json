@@ -11,7 +11,7 @@
       "name": "linux-cpm",
       "displayName": "Linux + CPM",
       "generator": "Unix Makefiles",
-      "binaryDir": "${sourceDir}/build/linux",
+      "binaryDir": "${sourceDir}/build/",
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
         "CMAKE_BUILD_TYPE": "Release"
@@ -22,7 +22,7 @@
       "name": "windows-vs",
       "displayName": "Windows + Visual Studio",
       "generator": "Visual Studio 17 2022",
-      "binaryDir": "${sourceDir}/build/windows",
+      "binaryDir": "${sourceDir}/build/",
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
