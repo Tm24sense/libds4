@@ -5,29 +5,55 @@
     "minor": 21,
     "patch": 0
   },
+
   "configurePresets": [
     {
       "name": "linux-cpm",
       "displayName": "Linux + CPM",
-      "description": "Configure libds4 with CPM dependencies on Linux",
       "generator": "Unix Makefiles",
-      "binaryDir": "${sourceDir}/build",
+      "binaryDir": "${sourceDir}/build/linux",
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+
+    {
+      "name": "windows-vs",
+      "displayName": "Windows + Visual Studio",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/build/windows",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
       }
     }
   ],
+
   "buildPresets": [
     {
       "name": "linux-cpm-build",
-      "displayName": "Build Linux + CPM",
       "configurePreset": "linux-cpm",
-      "targets": [
-        "all"
-      ],
-      "configuration": "Debug",
+      "targets": ["all"],
       "jobs": 8
+    },
+
+    {
+      "name": "windows-vs-debug",
+      "displayName": "Build Windows (Debug)",
+      "configurePreset": "windows-vs",
+      "configuration": "Debug"
+    },
+
+    {
+      "name": "windows-vs-release",
+      "displayName": "Build Windows (Release)",
+      "configurePreset": "windows-vs",
+      "configuration": "Release"
     }
   ]
 }
