@@ -1,13 +1,33 @@
 {
-  "version": 2,
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
   "configurePresets": [
     {
-      "name": "build",
-      "generator": "Ninja",
+      "name": "linux-cpm",
+      "displayName": "Linux + CPM",
+      "description": "Configure libds4 with CPM dependencies on Linux",
+      "generator": "Unix Makefiles",
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+        "CMAKE_BUILD_TYPE": "Debug"
       }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux-cpm-build",
+      "displayName": "Build Linux + CPM",
+      "configurePreset": "linux-cpm",
+      "targets": [
+        "all"
+      ],
+      "configuration": "Debug",
+      "jobs": 8
     }
   ]
 }

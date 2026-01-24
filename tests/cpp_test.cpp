@@ -1,24 +1,34 @@
 #include <chrono>
+#include <vector>
 #include <thread>
 #include <iostream>
 #include <ds4pp/Device.hpp>
+using namespace std::chrono;
+using namespace DS4;
 int main() 
 {
-    DS4::DualShock4 device;
+    DualShock4 device;
     device.Connect();
-    const int targetHz = 250;
-    const std::chrono::milliseconds frameDuration(1000 / targetHz);
+    
 
     while (true) 
     {
-        auto start = std::chrono::steady_clock::now();
-
+        
         device.Update();
         
-        // Output data
-        auto [x, y, z] = device.GetAccelData();
-        std::cout << "\rX: " << (int)x << " Y: " << (int)y << " Z: " << (int)z << std::flush;
+        std::vector<ControllerButton> combo = {
+            ControllerButton::Circle, ControllerButton::Cross,
+            ControllerButton::DPadNorth
+        };
 
+        if(device.AreButtonsPressed(combo))
+        {
+            std::cout << "pressed\n";
+            device.Rumble(128, 128, 2.0s);
+        }
+        
         device.SendCommandBuffer();
+        std::this_thread::sleep_for(2ms);
+        
     }
 }

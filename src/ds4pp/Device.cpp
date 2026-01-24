@@ -81,15 +81,16 @@ void DS4::DualShock4::SendCommandBuffer()
     }
 }
 
-bool DS4::DualShock4::IsButtonPressed(DS4_Buttons Button)
+bool DS4::DualShock4::IsButtonPressed(ControllerButton Button)
 {
-    return ds4_button_pressed(&this->state, (Button));
+    return ds4_button_pressed(&this->state, static_cast<DS4_Buttons>(Button));
 }
 
-bool DS4::DualShock4::AreButtonsPressed(std::vector<DS4_Buttons> &Buttons)
+bool DS4::DualShock4::AreButtonsPressed(std::vector<ControllerButton> &Buttons)
 {
-    for (DS4_Buttons b : Buttons)
+    for (ControllerButton _button : Buttons)
     {
+        DS4_Buttons b = static_cast<DS4_Buttons>(_button);
         switch (b)
         {
         case DS_BTN_Square:
