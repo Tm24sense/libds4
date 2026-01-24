@@ -3,5 +3,5 @@
 #ifdef _WIN32
 #include <hidapi/hidapi.h>
 #else
-#include "hidapi.h"
+#include <hidapi.h>
 #endif

@@ -16,16 +16,16 @@ namespace DS4
         DualShock4();
         ~DualShock4();
         void Connect();
-        void Rumble(uint8_t RightMotor, uint8_t LeftMotor, std::chrono::duration<double> duration);
+        void Rumble(std::byte RightMotor, std::byte LeftMotor, std::chrono::duration<double> duration);
         void EndRumble();
         uint8_t GetBatteryLevel();
 
         std::tuple<int16_t, int16_t, int16_t> GetGyroData();
         std::tuple<int16_t, int16_t, int16_t> GetAccelData();
-        void SetLed(uint8_t r, uint8_t g, uint8_t b);
+        void SetLed(std::byte r, std::byte g, std::byte b);
         void EnableFlash(bool enabled);
         bool IsFlashEnabled();
-        void SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff);
+        void SetFlash(std::byte FlashDurationOn, std::byte FlashDurationOff);
         void SendCommandBuffer();
         bool IsButtonPressed(ControllerButton Button);
         bool AreButtonsPressed(std::vector<ControllerButton> &Buttons);

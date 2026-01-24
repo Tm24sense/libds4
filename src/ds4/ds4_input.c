@@ -1,7 +1,6 @@
 #include <ds4/hidapi_macro.h>
 #include <ds4/ds4_input.h>
 #include <ds4/ds4_handle.h>
-
 ds4_input_report ds4_read_ireport(ds4_handle *dev)
 {
     ds4_input_report _rep;
@@ -69,5 +68,33 @@ ds4_state ds4_parse_state(ds4_input_report *input)
     state.is_plugged = input->report[30] & 0x10;
     state.headphones = input->report[30] & 0x20;
 
+    // Touchpad data
+    state.touchpad = parse_touchpad_data(input);
     return state;
+}
+
+Touchpad_t parse_touchpad_data(ds4_input_report *_R)
+{
+    Touchpad_t tp;
+
+    tp.N1_touching = !(_R->report[35] & 0x80);
+    
+    tp.N1_id = _R->report[35] & 0x7F;
+
+    
+    tp.N1_pos_x = (uint16_t)_R->report[36] | (((uint16_t)_R->report[37] & 0x0F) << 8);
+    
+    tp.N1_pos_y = ((uint16_t)_R->report[37] >> 4) | ((uint16_t)_R->report[38] << 4);
+
+
+    
+    tp.N2_touching = !(_R->report[39] & 0x80);
+    tp.N2_id = _R->report[39] & 0x7F;
+
+    
+    tp.N2_pos_x = (uint16_t)_R->report[40] | (((uint16_t)_R->report[41] & 0x0F) << 8);
+    
+    tp.N2_pos_y = ((uint16_t)_R->report[41] >> 4) | ((uint16_t)_R->report[42] << 4);
+
+    return tp;
 }

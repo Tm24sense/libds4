@@ -29,8 +29,25 @@ typedef enum DS4_DPAD
 } DS4_DPAD;
 
 
+typedef struct _Touchpad_Point
+{
+    //35
+    bool N1_touching;
+    int N1_id;
+    // 36-38
+    // first 12 bits X coord , then second 12 bits Y is
+    int N1_pos_x;
+    int N1_pos_y;
+
+    //39
+    bool N2_touching;
+    int N2_id;
+    //first 12 bits X coord , then second 12 bits Y is
+    int N2_pos_x;
+    int N2_pos_y;
 
 
+} Touchpad_t;
 
 typedef struct ds4_state {
     uint8_t leftstickX;
@@ -71,6 +88,8 @@ typedef struct ds4_state {
     bool is_plugged;
     bool headphones;
 
+    Touchpad_t touchpad;
+
     
 } ds4_state;
 
@@ -79,3 +98,4 @@ ds4_state ds4_update(ds4_handle* handle);
 ds4_input_report ds4_read_ireport(ds4_handle *dev);
 
 ds4_state ds4_parse_state(ds4_input_report *input);
+Touchpad_t parse_touchpad_data();

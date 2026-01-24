@@ -26,12 +26,12 @@ void DS4::DualShock4::Connect()
         ds4_destroy_handle(handle);
     }
 }
-void DS4::DualShock4::Rumble(uint8_t RightMotor, uint8_t LeftMotor, std::chrono::duration<double> duration)
+void DS4::DualShock4::Rumble(std::byte RightMotor, std::byte LeftMotor, std::chrono::duration<double> duration)
 {
     this->clock_end = std::chrono::high_resolution_clock::now() +
                       std::chrono::duration_cast<std::chrono::high_resolution_clock::duration>(duration);
 
-    ds4_set_vibration(&this->output, RightMotor, LeftMotor);
+    ds4_set_vibration(&this->output, std::to_integer<uint8_t>(RightMotor), std::to_integer<uint8_t>(LeftMotor));
 }
 
 void DS4::DualShock4::EndRumble()
@@ -54,9 +54,10 @@ std::tuple<int16_t, int16_t, int16_t> DS4::DualShock4::GetAccelData()
     ds4_motion_t accel_data = ds4_accel_query(&this->state);
     return {accel_data.x, accel_data.y, accel_data.z};
 }
-void DS4::DualShock4::SetLed(uint8_t r, uint8_t g, uint8_t b)
+void DS4::DualShock4::SetLed(std::byte r, std::byte g, std::byte b)
 {
-    ds4_set_led(&this->output, r, g, b);
+    
+    ds4_set_led(&this->output, std::to_integer<uint8_t>(r), std::to_integer<uint8_t>(g), std::to_integer<uint8_t>(b));
 }
 
 void DS4::DualShock4::EnableFlash(bool enabled)
@@ -69,9 +70,9 @@ bool DS4::DualShock4::IsFlashEnabled()
 {
     return flash_enabled;
 }
-void DS4::DualShock4::SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff)
+void DS4::DualShock4::SetFlash(std::byte FlashDurationOn, std::byte FlashDurationOff)
 {
-    ds4_enable_flash(&this->output, FlashDurationOn, FlashDurationOff, 1);
+    ds4_enable_flash(&this->output, std::to_integer<uint8_t>(FlashDurationOn), std::to_integer<uint8_t>(FlashDurationOff), true);
 }
 void DS4::DualShock4::SendCommandBuffer()
 {

@@ -27,6 +27,6 @@ void ds4_set_vibration(ds4_message *_r, uint8_t right_motor, uint8_t left_motor)
 ds4_message ds4_begin_message();
 int ds4_send_commands(ds4_handle *dev, ds4_message *message);
 
-void ds4_set_led(ds4_message *_r, int r, int g, int b);
+void ds4_set_led(ds4_message *_r, uint8_t r, uint8_t g, uint8_t b);
 
 int ds4_flush_report(ds4_handle *dev, ds4_message *data);

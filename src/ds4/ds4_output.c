@@ -27,9 +27,9 @@ void ds4_set_vibration(ds4_message *_r, uint8_t right_motor, uint8_t left_motor)
 
 
 
-void ds4_set_led(ds4_message *_r, int r, int g, int b)
+void ds4_set_led(ds4_message *_r, uint8_t r, uint8_t g, uint8_t b)
 {
-    /* Red, Green, Blue LED values */
+    /*RGB*/
     _r->hid_report.report[6] = r;
     _r->hid_report.report[7] = g;
     _r->hid_report.report[8] = b;
