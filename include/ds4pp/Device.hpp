@@ -6,9 +6,9 @@ extern "C"
 #include <vector>
 #include <chrono>
 #include <tuple>
-#include "Input.hpp"
-#include "TouchPad.hpp"
-#include "Models.hpp"
+#include <ds4pp/Input.hpp>
+#include <ds4pp/TouchPad.hpp>
+#include <ds4pp/Models.hpp>
 namespace DS4
 {
     class DualShock4
@@ -23,7 +23,7 @@ namespace DS4
         TouchPadState GetTouchPadState();
         std::tuple<int16_t, int16_t, int16_t> GetGyroData();
         std::tuple<int16_t, int16_t, int16_t> GetAccelData();
-        Models GetDeviceModel();
+        DS4::Models GetDeviceModel();
         void SetLed(std::byte r, std::byte g, std::byte b);
         void EnableFlash(bool enabled);
         bool IsFlashEnabled();

@@ -6,14 +6,14 @@ namespace DS4
 
     struct TouchPoint
     {
-        uint8_t id;
+        int id;
         bool active;
-        uint16_t x;
-        uint16_t y;
+        int x;
+        int y;
     };
 
     struct TouchPadState
     {
         std::array<TouchPoint, 2> States;
-    }
+    };
 }

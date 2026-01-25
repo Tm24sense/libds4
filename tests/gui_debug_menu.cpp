@@ -7,7 +7,7 @@
 #include "imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 
-// Wrap the C Library include directly in the CPP file
+
 extern "C" {
     #include <ds4/ds4.h>
 }
@@ -18,34 +18,34 @@ int main() {
         return 1;
     }
 
-    // Create window with graphics context
+    
     GLFWwindow* window = glfwCreateWindow(1280, 720, "libds4 - ImGui Debug Menu", NULL, NULL);
     if (window == NULL) return 1;
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // Enable vsync (60 FPS)
+    glfwSwapInterval(1); 
 
-    // 2. Setup Dear ImGui context
+    
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImGui::StyleColorsDark();
 
-    // Setup Platform/Renderer backends
+    
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 
-    // 3. Initialize DS4
+    
     ds4_handle* handle = ds4_open_device();
     if (!handle) {
         std::cerr << "Error: Could not find DualShock 4 Controller!" << std::endl;
-        // We continue so the UI shows up, but with a warning
+        
     }
 
-    // Data for the packet graph
+    
     std::vector<float> packet_history(100, 0.0f);
     ds4_state state;
 
-    // Main Loop
+    
     while (!glfwWindowShouldClose(window)) {
         
         glfwPollEvents();
@@ -55,12 +55,12 @@ int main() {
             state = ds4_update(handle);
         }
 
-        // Start the ImGui frame
+        
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // --- GUI WINDOW ---
+        
         ImGui::SetNextWindowSize(ImVec2(500, 600), ImGuiCond_FirstUseEver);
         ImGui::Begin("Controller Debugger");
 
@@ -72,14 +72,14 @@ int main() {
         } else {
             ImGui::TextColored(ImVec4(0, 1, 0, 1), "STATUS: Connected");
 
-            // --- Section: General Info ---
+            
             if (ImGui::CollapsingHeader("Power & Thermal", ImGuiTreeNodeFlags_DefaultOpen)) {
                 float battery = ds4_battery_level_percentage(&state);
                 ImGui::ProgressBar(battery / 100.0f, ImVec2(-1, 0), "Battery %");
                 ImGui::Text("Temperature: %d", ds4_get_temperature(&state));
             }
 
-            // --- Section: Analog Sticks ---
+            
             if (ImGui::CollapsingHeader("Analog Inputs", ImGuiTreeNodeFlags_DefaultOpen)) {
                 ds4_point left = ds4_left_stick(&state);
                 ds4_point right = ds4_right_stick(&state);
@@ -101,9 +101,9 @@ int main() {
                 ImGui::SliderInt("R2 Pressure", &r2, 0, 255);
             }
 
-            // --- Section: Graphing ---
+            
             if (ImGui::CollapsingHeader("Communication Metrics", ImGuiTreeNodeFlags_DefaultOpen)) {
-                // Update graph data
+                
                 if (packet_history.size() >= 100) {
                     packet_history.erase(packet_history.begin());
                 }
@@ -114,7 +114,6 @@ int main() {
                                  0, "Packet Counter Over Time", 0.0f, 255.0f, ImVec2(-1, 100));
             }
 
-            // --- Section: Buttons ---
             if (ImGui::CollapsingHeader("Digital Buttons")) {
                 ImGui::Text("D-Pad: %d", state.dpad_state);
                 ImGui::Checkbox("PS Button", (bool*)&state.PS_Button);
@@ -125,9 +124,7 @@ int main() {
         }
 
         ImGui::End();
-        // --- END GUI WINDOW ---
-
-        // Rendering
+        
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
@@ -139,7 +136,7 @@ int main() {
         glfwSwapBuffers(window);
     }
 
-    // Cleanup
+    
     if (handle) ds4_destroy_handle(handle);
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

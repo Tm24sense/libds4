@@ -10,6 +10,7 @@ int main()
     DualShock4 device;
     device.Connect();
     
+    
     while (true) 
     {
         
@@ -22,8 +23,7 @@ int main()
 
         if(device.AreButtonsPressed(combo))
         {
-            std::cout << "pressed\n";
-            device.Rumble(128, 128, 2.0s);
+            std::cout << "pressed\n" << (int)device.GetDeviceModel();
         }
         
         device.SendCommandBuffer();

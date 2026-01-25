@@ -1,6 +1,5 @@
 #include <ds4pp/Device.hpp>
 #include <stdexcept>
-#include "Device.hpp"
 
 using namespace std::chrono_literals;
 
@@ -40,19 +39,29 @@ void DS4::DualShock4::EndRumble()
     this->output.hid_report.report[4] = 0x00;
     this->output.hid_report.report[5] = 0x00;
 }
+
 uint8_t DS4::DualShock4::GetBatteryLevel()
 {
     return (ds4_battery_level(&this->state));
 }
-TouchPadState DS4::DualShock4::GetTouchPadState()
-{
-    TouchPadState _State{
-        {{this->state.touchpad.N1_id, this->state.touchpad.N1_touching,
-          this->state.touchpad.N1_pos_x, this->state.touchpad.N1_pos_y},
-         {this->state.touchpad.N2_id, this->state.touchpad.N2_touching,
-          this->state.touchpad.N2_pos_x, this->state.touchpad.N2_pos_y}}};
 
-    return _State;
+DS4::TouchPadState DS4::DualShock4::GetTouchPadState()
+{
+    DS4::TouchPadState state{};
+
+    // Finger 1
+    state.States[0].id       = (this->state.touchpad.N1_id);
+    state.States[0].active   = this->state.touchpad.N1_touching;
+    state.States[0].x        = (this->state.touchpad.N1_pos_x);
+    state.States[0].y        = (this->state.touchpad.N1_pos_y);
+
+    // Finger 2
+    state.States[1].id       = (this->state.touchpad.N2_id);
+    state.States[1].active   = this->state.touchpad.N2_touching;
+    state.States[1].x        = (this->state.touchpad.N2_pos_x);
+    state.States[1].y        = (this->state.touchpad.N2_pos_y);
+
+    return state;
 }
 
 std::tuple<int16_t, int16_t, int16_t> DS4::DualShock4::GetGyroData()
@@ -60,19 +69,17 @@ std::tuple<int16_t, int16_t, int16_t> DS4::DualShock4::GetGyroData()
     ds4_motion_t gyro_data = ds4_gyro_query(&this->state);
     return {gyro_data.x, gyro_data.y, gyro_data.z};
 }
+
 std::tuple<int16_t, int16_t, int16_t> DS4::DualShock4::GetAccelData()
 {
     ds4_motion_t accel_data = ds4_accel_query(&this->state);
     return {accel_data.x, accel_data.y, accel_data.z};
 }
 
-Models DS4::DualShock4::GetDeviceModel()
+DS4::Models DS4::DualShock4::GetDeviceModel()
 {
     switch (this->handle->dev_type)
     {
-    case DS4_NONE:
-        return Models::None;
-        break;
     case DS4_ORIGNAL:
         return Models::Orignal;
         break;
