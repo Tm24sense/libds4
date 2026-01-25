@@ -1,0 +1,16 @@
+{
+  "dependencies": [
+    "hidapi",
+     {
+            "name": "imgui",
+            "features": ["glfw-binding", "opengl3-binding"]
+        },
+        {
+            "name": "glfw3"
+        },
+        {
+            "name": "glew"
+        },
+        "opengl"
+  ]
+}

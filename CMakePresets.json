@@ -5,51 +5,36 @@
     "minor": 21,
     "patch": 0
   },
-
   "configurePresets": [
     {
-      "name": "linux-cpm",
-      "displayName": "Linux + CPM",
-      "generator": "Unix Makefiles",
-      "binaryDir": "${sourceDir}/build/",
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    {
+      "name": "linux-vcpkg",
+      "displayName": "Linux",
+      "inherits": "base",
+      "generator": "Ninja",
+      "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
     },
-
     {
-      "name": "windows-vs",
-      "displayName": "Windows + Visual Studio",
-      "binaryDir": "${sourceDir}/build/",
+      "name": "windows-vcpkg",
+      "displayName": "Windows",
+      "inherits": "base",
       "generator": "Visual Studio 18 2026",
-      "cacheVariables": {
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
-        "BUILD_TESTS": "ON"
-      }
+      "architecture": "x64"
     }
   ],
-
   "buildPresets": [
-    {
-      "name": "linux-cpm-build",
-      "configurePreset": "linux-cpm",
-      "targets": ["all"],
-      "jobs": 8
-    },
-
-    {
-      "name": "windows-vs-debug",
-      "displayName": "Build Windows (Debug)",
-      "configurePreset": "windows-vs",
-      "configuration": "Debug"
-    },
-
-    {
-      "name": "windows-vs-release",
-      "displayName": "Build Windows (Release)",
-      "configurePreset": "windows-vs",
-      "configuration": "Release"
-    }
+    { "name": "linux-release", "configurePreset": "linux-vcpkg" },
+    { "name": "windows-debug", "configurePreset": "windows-vcpkg", "configuration": "Debug" },
+    { "name": "windows-release", "configurePreset": "windows-vcpkg", "configuration": "Release" }
   ]
 }
