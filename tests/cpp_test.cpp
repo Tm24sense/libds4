@@ -10,7 +10,6 @@ int main()
     DualShock4 device;
     device.Connect();
     
-
     while (true) 
     {
         

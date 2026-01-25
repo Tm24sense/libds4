@@ -31,6 +31,8 @@ int main(void)
         printf("R3 Stick: X: %3d  Y: %3d\n", rightstick.x, rightstick.y);
         printf("touchpad Finger 1 pressed: %d\n", state.touchpad.N1_touching);
         printf("touchpad Finger 2 pressed: %d\n", state.touchpad.N2_touching);
+        printf("touchpad(x) %d\n", state.touchpad.N1_pos_x);
+        printf("touchpad(y) %d\n", state.touchpad.N1_pos_y);
         printf("R2 Pressed: %d\n", state.R2);
         printf("L2 Pressed: %d\n", state.L2);
         printf("R3 Pressed: %d\n", state.R3);

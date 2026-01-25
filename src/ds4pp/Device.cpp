@@ -1,5 +1,6 @@
 #include <ds4pp/Device.hpp>
 #include <stdexcept>
+#include "Device.hpp"
 
 using namespace std::chrono_literals;
 
@@ -43,6 +44,16 @@ uint8_t DS4::DualShock4::GetBatteryLevel()
 {
     return (ds4_battery_level(&this->state));
 }
+TouchPadState DS4::DualShock4::GetTouchPadState()
+{
+    TouchPadState _State{
+        {{this->state.touchpad.N1_id, this->state.touchpad.N1_touching,
+          this->state.touchpad.N1_pos_x, this->state.touchpad.N1_pos_y},
+         {this->state.touchpad.N2_id, this->state.touchpad.N2_touching,
+          this->state.touchpad.N2_pos_x, this->state.touchpad.N2_pos_y}}};
+
+    return _State;
+}
 
 std::tuple<int16_t, int16_t, int16_t> DS4::DualShock4::GetGyroData()
 {
@@ -54,9 +65,30 @@ std::tuple<int16_t, int16_t, int16_t> DS4::DualShock4::GetAccelData()
     ds4_motion_t accel_data = ds4_accel_query(&this->state);
     return {accel_data.x, accel_data.y, accel_data.z};
 }
+
+Models DS4::DualShock4::GetDeviceModel()
+{
+    switch (this->handle->dev_type)
+    {
+    case DS4_NONE:
+        return Models::None;
+        break;
+    case DS4_ORIGNAL:
+        return Models::Orignal;
+        break;
+    case DS4_SLIM:
+    case DS4_PRO:
+        return Models::Slim_Pro;
+        break;
+
+    default:
+        return Models::None;
+        break;
+    }
+}
 void DS4::DualShock4::SetLed(std::byte r, std::byte g, std::byte b)
 {
-    
+
     ds4_set_led(&this->output, std::to_integer<uint8_t>(r), std::to_integer<uint8_t>(g), std::to_integer<uint8_t>(b));
 }
 

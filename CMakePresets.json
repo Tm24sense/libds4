@@ -22,13 +22,10 @@
       "name": "windows-vs",
       "displayName": "Windows + Visual Studio",
       "binaryDir": "${sourceDir}/build/",
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Windows"
-      },
+      "generator": "Visual Studio 18 2026",
       "cacheVariables": {
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+        "BUILD_TESTS": "ON"
       }
     }
   ],

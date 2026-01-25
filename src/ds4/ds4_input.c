@@ -40,19 +40,19 @@ ds4_state ds4_parse_state(ds4_input_report *input)
     state.L3 = various & 0x40;
     state.R3 = various & 0x80;
 
-    /* Byte 7: PS button, touchpad, and packet counter */
+    /* byte 7: PS button, touchpad, and packet counter */
     state.PS_Button = input->report[7] & 0x01;
     state.TouchPad_click = input->report[7] & 0x02;
     state.packet_counter = input->report[7] & 0x3F;
 
-    /* Bytes 8-9: Analog trigger values */
+    /* bytes 8-9: Analog trigger values */
     state.l2analog = input->report[8];
     state.r2analog = input->report[9];
 
-    /* Byte 12: Temperature */
+    /* byte 12: Temperature */
     state.Temprature = input->report[12];
 
-    /* Byte 13-18 (Gyro)*/
+    /* byte 13-18 (Gyro)*/
     state.gyroX = (int16_t)(input->report[13] | (input->report[14] << 8));
     state.gyroY = (int16_t)(input->report[15] | (input->report[16] << 8));
     state.gyroZ = (int16_t)(input->report[17] | (input->report[18] << 8));
@@ -61,7 +61,7 @@ ds4_state ds4_parse_state(ds4_input_report *input)
     state.accelY = (int16_t)(input->report[21] | (input->report[22] << 8));
     state.accelZ = (int16_t)(input->report[23] | (input->report[24] << 8));
 
-    /* Byte 30: Battery and status flags */
+    /* byte 30: Battery and status flags */
 
     state.microphone = input->report[30] & (1 << 6);
     state.battery_level = input->report[30] & 0x0F;
@@ -78,22 +78,18 @@ Touchpad_t parse_touchpad_data(ds4_input_report *_R)
     Touchpad_t tp;
 
     tp.N1_touching = !(_R->report[35] & 0x80);
-    
+
     tp.N1_id = _R->report[35] & 0x7F;
 
-    
     tp.N1_pos_x = (uint16_t)_R->report[36] | (((uint16_t)_R->report[37] & 0x0F) << 8);
-    
+
     tp.N1_pos_y = ((uint16_t)_R->report[37] >> 4) | ((uint16_t)_R->report[38] << 4);
 
-
-    
     tp.N2_touching = !(_R->report[39] & 0x80);
     tp.N2_id = _R->report[39] & 0x7F;
 
-    
     tp.N2_pos_x = (uint16_t)_R->report[40] | (((uint16_t)_R->report[41] & 0x0F) << 8);
-    
+
     tp.N2_pos_y = ((uint16_t)_R->report[41] >> 4) | ((uint16_t)_R->report[42] << 4);
 
     return tp;
