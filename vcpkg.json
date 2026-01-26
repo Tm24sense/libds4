@@ -2,16 +2,6 @@
     "name": "libds4",
     "version": "1.0.0",
     "dependencies": [
-        "hidapi",
-        {
-            "name": "imgui",
-            "features": [
-                "glfw-binding",
-                "opengl3-binding"
-            ]
-        },
-        "glfw3",
-        "glew",
-        "opengl"
+        "hidapi"
     ]
 }

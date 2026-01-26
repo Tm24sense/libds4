@@ -1,16 +1,11 @@
 cmake_minimum_required(VERSION 3.21)
 project(libds4 VERSION 1.0 LANGUAGES C CXX)
-
-set(VCPKG_LIBRARY_LINKAGE static)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD 11)
 
 find_package(hidapi CONFIG REQUIRED)
-find_package(glfw3 CONFIG REQUIRED)
-find_package(imgui CONFIG REQUIRED)
-find_package(OpenGL REQUIRED)
-add_library(ds4 STATIC
+add_library(ds4
     src/ds4/ds4_identify.c
     src/ds4/ds4_handle.c
     src/ds4/ds4_output.c
@@ -25,7 +20,7 @@ target_include_directories(ds4
 )
 
 target_link_libraries(ds4 PUBLIC hidapi::hidapi)
-add_library(ds4pp STATIC
+add_library(ds4pp
     src/ds4pp/Device.cpp
 )
 
@@ -73,13 +68,6 @@ install(FILES
 
 option(BUILD_TESTS "Build tests" ON)
 if(BUILD_TESTS)
-    add_executable(debug_menu tests/gui_debug_menu.cpp)
-    target_link_libraries(debug_menu PRIVATE
-        ds4pp
-        glfw
-        imgui::imgui
-        OpenGL::GL
-    )
     add_executable(cpp_test tests/cpp_test.cpp)
     target_link_libraries(
         cpp_test ds4pp
