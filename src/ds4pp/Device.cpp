@@ -1,235 +1,267 @@
 #include <ds4pp/Device.hpp>
 #include <stdexcept>
 
+extern "C"
+{
+#include <ds4/ds4.h>
+}
+
 using namespace std::chrono_literals;
 
-DS4::DualShock4::DualShock4()
+namespace DS4
 {
-    this->handle = nullptr;
-    this->output = ds4_begin_message();
-    this->flash_enabled = false;
-}
 
-DS4::DualShock4::~DualShock4()
-{
-    ds4_destroy_handle(handle);
-}
-
-void DS4::DualShock4::Connect()
-{
-    this->handle = nullptr;
-    this->handle = ds4_open_device();
-
-    if (!handle)
+    struct DualShock4::Impl
     {
-        throw std::runtime_error("Failed to find a DualShock4 device (Maybe try running with admin/sudo rights) ");
-        ds4_destroy_handle(handle);
+        ds4_handle *handle = nullptr;
+        ds4_state state{};
+        ds4_message output{};
+        bool flash_enabled = false;
+
+        std::chrono::high_resolution_clock::time_point clock_end{};
+    };
+
+    DualShock4::DualShock4()
+        : impl(new Impl{})
+    {
+        impl->output = ds4_begin_message();
     }
-}
-void DS4::DualShock4::Rumble(std::byte RightMotor, std::byte LeftMotor, std::chrono::duration<double> duration)
-{
-    this->clock_end = std::chrono::high_resolution_clock::now() +
-                      std::chrono::duration_cast<std::chrono::high_resolution_clock::duration>(duration);
 
-    ds4_set_vibration(&this->output, std::to_integer<uint8_t>(RightMotor), std::to_integer<uint8_t>(LeftMotor));
-}
-
-void DS4::DualShock4::EndRumble()
-{
-    this->output.hid_report.report[4] = 0x00;
-    this->output.hid_report.report[5] = 0x00;
-}
-
-uint8_t DS4::DualShock4::GetBatteryLevel()
-{
-    return (ds4_battery_level(&this->state));
-}
-
-DS4::TouchPadState DS4::DualShock4::GetTouchPadState()
-{
-    DS4::TouchPadState state{};
-
-    // Finger 1
-    state.States[0].id       = (this->state.touchpad.N1_id);
-    state.States[0].active   = this->state.touchpad.N1_touching;
-    state.States[0].x        = (this->state.touchpad.N1_pos_x);
-    state.States[0].y        = (this->state.touchpad.N1_pos_y);
-
-    // Finger 2
-    state.States[1].id       = (this->state.touchpad.N2_id);
-    state.States[1].active   = this->state.touchpad.N2_touching;
-    state.States[1].x        = (this->state.touchpad.N2_pos_x);
-    state.States[1].y        = (this->state.touchpad.N2_pos_y);
-
-    return state;
-}
-
-std::tuple<int16_t, int16_t, int16_t> DS4::DualShock4::GetGyroData()
-{
-    ds4_motion_t gyro_data = ds4_gyro_query(&this->state);
-    return {gyro_data.x, gyro_data.y, gyro_data.z};
-}
-
-std::tuple<int16_t, int16_t, int16_t> DS4::DualShock4::GetAccelData()
-{
-    ds4_motion_t accel_data = ds4_accel_query(&this->state);
-    return {accel_data.x, accel_data.y, accel_data.z};
-}
-
-DS4::Models DS4::DualShock4::GetDeviceModel()
-{
-    switch (this->handle->dev_type)
+    DualShock4::~DualShock4()
     {
-    case DS4_ORIGNAL:
-        return Models::Orignal;
-        break;
-    case DS4_SLIM:
-    case DS4_PRO:
-        return Models::Slim_Pro;
-        break;
-
-    default:
-        return Models::None;
-        break;
+        if (impl->handle)
+            ds4_destroy_handle(impl->handle);
+        delete impl;
     }
-}
-void DS4::DualShock4::SetLed(std::byte r, std::byte g, std::byte b)
-{
 
-    ds4_set_led(&this->output, std::to_integer<uint8_t>(r), std::to_integer<uint8_t>(g), std::to_integer<uint8_t>(b));
-}
-
-void DS4::DualShock4::EnableFlash(bool enabled)
-{
-    this->flash_enabled = enabled;
-    (enabled) ? ds4_enable_flash(&this->output, 255, 255, 1) : ds4_enable_flash(&this->output, 0x00, 0x00, 0);
-}
-
-bool DS4::DualShock4::IsFlashEnabled()
-{
-    return flash_enabled;
-}
-void DS4::DualShock4::SetFlash(std::byte FlashDurationOn, std::byte FlashDurationOff)
-{
-    ds4_enable_flash(&this->output, std::to_integer<uint8_t>(FlashDurationOn), std::to_integer<uint8_t>(FlashDurationOff), true);
-}
-void DS4::DualShock4::SendCommandBuffer()
-{
-    if (!ds4_send_commands(handle, &this->output))
+    void DualShock4::Connect()
     {
-        throw std::runtime_error("Device removed or disconnected could not send buffer to device");
-    }
-}
-
-bool DS4::DualShock4::IsButtonPressed(ControllerButton Button)
-{
-    return ds4_button_pressed(&this->state, static_cast<DS4_Buttons>(Button));
-}
-
-bool DS4::DualShock4::AreButtonsPressed(std::vector<ControllerButton> &Buttons)
-{
-    for (ControllerButton _button : Buttons)
-    {
-        DS4_Buttons b = static_cast<DS4_Buttons>(_button);
-        switch (b)
+        impl->handle = ds4_open_device();
+        if (!impl->handle)
         {
-        case DS_BTN_Square:
-        case DS_BTN_Cross:
-        case DS_BTN_Circle:
-        case DS_BTN_Triangle:
-            if (!(this->state.faceButtons & b))
-                return false;
-            break;
-
-        case DS_BTN_L1:
-            if (!state.L1)
-                return false;
-            break;
-        case DS_BTN_R1:
-            if (!state.R1)
-                return false;
-            break;
-        case DS_BTN_L2:
-            if (!state.L2)
-                return false;
-            break;
-        case DS_BTN_R2:
-            if (!state.R2)
-                return false;
-            break;
-        case DS_BTN_Share:
-            if (!state.Share)
-                return false;
-            break;
-        case DS_BTN_Option:
-            if (!state.Option)
-                return false;
-            break;
-        case DS_BTN_L3:
-            if (!state.L3)
-                return false;
-            break;
-        case DS_BTN_R3:
-            if (!state.R3)
-                return false;
-            break;
-        case DS_BTN_TouchPad:
-            if (!state.TouchPad_click)
-                return false;
-            break;
-        case DS_DPAD_NORTH:
-            if (state.dpad_state != DS_DPAD_NORTH)
-                return false;
-            break;
-        case DS_DPAD_NORTH_EAST:
-            if (state.dpad_state != DS_DPAD_NORTH_EAST)
-                return false;
-            break;
-        case DS_DPAD_EAST:
-            if (state.dpad_state != DS_DPAD_EAST)
-                return false;
-            break;
-        case DS_DPAD_SOUTH_EAST:
-            if (state.dpad_state != DS_DPAD_SOUTH_EAST)
-                return false;
-            break;
-        case DS_DPAD_SOUTH:
-            if (state.dpad_state != DS_DPAD_SOUTH)
-                return false;
-            break;
-        case DS_DPAD_SOUTH_WEST:
-            if (state.dpad_state != DS_DPAD_SOUTH_WEST)
-                return false;
-            break;
-        case DS_DPAD_WEST:
-            if (state.dpad_state != DS_DPAD_WEST)
-                return false;
-            break;
-        case DS_DPAD_NORTH_WEST:
-            if (state.dpad_state != DS_DPAD_NORTH_WEST)
-                return false;
-            break;
-        case DS_BTN_None:
-            return false;
-            break;
+            throw std::runtime_error(
+                "Failed to find a DualShock4 device (try admin/sudo)");
         }
     }
 
-    return true;
-}
-void DS4::DualShock4::Update()
-{
-    if (IsTimeEnd())
+    void DualShock4::Rumble(std::byte RightMotor,
+                            std::byte LeftMotor,
+                            std::chrono::duration<double> duration)
     {
-        this->EndRumble();
+        impl->clock_end =
+            std::chrono::high_resolution_clock::now() +
+            std::chrono::duration_cast<
+                std::chrono::high_resolution_clock::duration>(duration);
+
+        ds4_set_vibration(
+            &impl->output,
+            std::to_integer<uint8_t>(RightMotor),
+            std::to_integer<uint8_t>(LeftMotor));
     }
-    this->state = ds4_update(handle);
-}
-bool DS4::DualShock4::IsTimeEnd()
-{
-    if (this->clock_end <= std::chrono::high_resolution_clock::now())
+
+    void DualShock4::EndRumble()
     {
+        impl->output.hid_report.report[4] = 0x00;
+        impl->output.hid_report.report[5] = 0x00;
+    }
+
+    uint8_t DualShock4::GetBatteryLevel()
+    {
+        return ds4_battery_level(&impl->state);
+    }
+
+    TouchPadState DualShock4::GetTouchPadState()
+    {
+        TouchPadState state{};
+
+        state.States[0].id = impl->state.touchpad.N1_id;
+        state.States[0].active = impl->state.touchpad.N1_touching;
+        state.States[0].x = impl->state.touchpad.N1_pos_x;
+        state.States[0].y = impl->state.touchpad.N1_pos_y;
+
+        state.States[1].id = impl->state.touchpad.N2_id;
+        state.States[1].active = impl->state.touchpad.N2_touching;
+        state.States[1].x = impl->state.touchpad.N2_pos_x;
+        state.States[1].y = impl->state.touchpad.N2_pos_y;
+
+        return state;
+    }
+
+    std::tuple<int16_t, int16_t, int16_t> DualShock4::GetGyroData()
+    {
+        ds4_motion_t g = ds4_gyro_query(&impl->state);
+        return {g.x, g.y, g.z};
+    }
+
+    std::tuple<int16_t, int16_t, int16_t> DualShock4::GetAccelData()
+    {
+        ds4_motion_t a = ds4_accel_query(&impl->state);
+        return {a.x, a.y, a.z};
+    }
+
+    Models DualShock4::GetDeviceModel()
+    {
+        switch (impl->handle->dev_type)
+        {
+        case DS4_ORIGNAL:
+            return Models::Orignal;
+        case DS4_SLIM:
+        case DS4_PRO:
+            return Models::Slim_Pro;
+        default:
+            return Models::None;
+        }
+    }
+    void DualShock4::SetLed(uint8_t r, uint8_t g, uint8_t b)
+    {
+        ds4_set_led(
+            &impl->output,
+            r,
+            g,
+            b);
+    }
+
+    void DualShock4::EnableFlash(bool enabled)
+    {
+        impl->flash_enabled = enabled;
+        ds4_enable_flash(
+            &impl->output,
+            enabled ? 255 : 0,
+            enabled ? 255 : 0,
+            enabled);
+    }
+
+    bool DualShock4::IsFlashEnabled()
+    {
+        return impl->flash_enabled;
+    }
+
+    void DualShock4::SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff)
+    {
+        ds4_enable_flash(
+            &impl->output,
+            (FlashDurationOn),
+            FlashDurationOff,
+            true);
+    }
+
+    void DualShock4::SendCommandBuffer()
+    {
+        if (!ds4_send_commands(impl->handle, &impl->output))
+            throw std::runtime_error(
+                "Device removed or disconnected");
+    }
+
+    bool DualShock4::IsButtonPressed(ControllerButton Button)
+    {
+        return ds4_button_pressed(
+            &impl->state,
+            static_cast<DS4_Buttons>(Button));
+    }
+
+    bool DualShock4::AreButtonsPressed(std::vector<ControllerButton> &Buttons)
+    {
+        for (ControllerButton _button : Buttons)
+        {
+            DS4_Buttons b = static_cast<DS4_Buttons>(_button);
+            switch (b)
+            {
+            case DS_BTN_Square:
+            case DS_BTN_Cross:
+            case DS_BTN_Circle:
+            case DS_BTN_Triangle:
+                if (!(impl->state.faceButtons & b))
+                    return false;
+                break;
+
+            case DS_BTN_L1:
+                if (!impl->state.L1)
+                    return false;
+                break;
+            case DS_BTN_R1:
+                if (!impl->state.R1)
+                    return false;
+                break;
+            case DS_BTN_L2:
+                if (!impl->state.L2)
+                    return false;
+                break;
+            case DS_BTN_R2:
+                if (!impl->state.R2)
+                    return false;
+                break;
+            case DS_BTN_Share:
+                if (!impl->state.Share)
+                    return false;
+                break;
+            case DS_BTN_Option:
+                if (!impl->state.Option)
+                    return false;
+                break;
+            case DS_BTN_L3:
+                if (!impl->state.L3)
+                    return false;
+                break;
+            case DS_BTN_R3:
+                if (!impl->state.R3)
+                    return false;
+                break;
+            case DS_BTN_TouchPad:
+                if (!impl->state.TouchPad_click)
+                    return false;
+                break;
+            case DS_DPAD_NORTH:
+                if (impl->state.dpad_state != DS_DPAD_NORTH)
+                    return false;
+                break;
+            case DS_DPAD_NORTH_EAST:
+                if (impl->state.dpad_state != DS_DPAD_NORTH_EAST)
+                    return false;
+                break;
+            case DS_DPAD_EAST:
+                if (impl->state.dpad_state != DS_DPAD_EAST)
+                    return false;
+                break;
+            case DS_DPAD_SOUTH_EAST:
+                if (impl->state.dpad_state != DS_DPAD_SOUTH_EAST)
+                    return false;
+                break;
+            case DS_DPAD_SOUTH:
+                if (impl->state.dpad_state != DS_DPAD_SOUTH)
+                    return false;
+                break;
+            case DS_DPAD_SOUTH_WEST:
+                if (impl->state.dpad_state != DS_DPAD_SOUTH_WEST)
+                    return false;
+                break;
+            case DS_DPAD_WEST:
+                if (impl->state.dpad_state != DS_DPAD_WEST)
+                    return false;
+                break;
+            case DS_DPAD_NORTH_WEST:
+                if (impl->state.dpad_state != DS_DPAD_NORTH_WEST)
+                    return false;
+                break;
+            case DS_BTN_None:
+                return false;
+            }
+        }
+
         return true;
     }
-    return false;
-}
+
+    void DualShock4::Update()
+    {
+        if (IsTimeEnd())
+            EndRumble();
+
+        impl->state = ds4_update(impl->handle);
+    }
+
+    bool DualShock4::IsTimeEnd()
+    {
+        return impl->clock_end <=
+               std::chrono::high_resolution_clock::now();
+    }
+
+} // namespace DS4

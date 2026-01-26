@@ -9,8 +9,6 @@ int main()
 {
     DualShock4 device;
     device.Connect();
-    
-    
     while (true) 
     {
         
@@ -27,7 +25,6 @@ int main()
         }
         
         device.SendCommandBuffer();
-        std::this_thread::sleep_for(2ms);
         
     }
 }
