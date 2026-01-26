@@ -1,0 +1,12 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# Make sure all dependencies are found when someone calls find_package(libds4)
+find_dependency(hidapi CONFIG REQUIRED)
+find_dependency(glfw3 CONFIG REQUIRED)
+find_dependency(imgui CONFIG REQUIRED)
+find_dependency(OpenGL REQUIRED)
+
+# Import exported targets
+include("${CMAKE_CURRENT_LIST_DIR}/libds4Targets.cmake")

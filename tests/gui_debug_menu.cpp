@@ -1,7 +1,5 @@
 #include <iostream>
 #include <vector>
-
-// ImGui & GLFW Includes
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -13,7 +11,7 @@ extern "C" {
 }
 
 int main() {
-    // 1. Initialize GLFW
+   
     if (!glfwInit()) {
         return 1;
     }
