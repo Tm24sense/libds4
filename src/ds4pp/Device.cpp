@@ -101,7 +101,7 @@ namespace DS4
 
     Models DualShock4::GetDeviceModel()
     {
-        switch (impl->handle->dev_type)
+        switch (ds4_get_model(impl->handle))
         {
         case DS4_ORIGNAL:
             return Models::Orignal;

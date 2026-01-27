@@ -1,6 +1,7 @@
-#include <ds4/hidapi_macro.h>
+#include <hidapi/hidapi.h>
 #include <ds4/ds4_input.h>
 #include <ds4/ds4_handle.h>
+#include <ds4/ds4_private.h>
 ds4_input_report ds4_read_ireport(ds4_handle *dev)
 {
     ds4_input_report _rep;

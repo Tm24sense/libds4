@@ -1,76 +1,44 @@
-#include <memory.h>
-#include <stdio.h>
-#include <ds4/ds4_output.h>
-#include <ds4/ds4_handle.h>
+#include <string.h>
+#include "ds4/ds4_output.h"
+#include "ds4/ds4_handle.h"
+#include "ds4/ds4_private.h"
+#include <hidapi/hidapi.h>
 
-ds4_output_report ds4_create_oreport(void)
-{
-    ds4_output_report _r;
-    memset(_r.report, 0x00, DS4_OUTPUT_REPORT_SIZE);
-
-    /* Report ID */
-    _r.report[0] = DS4_REPORT_HEADER;
-    /* Flags: enable vibration, LED, and flash */
-    _r.report[1] = 0x07;
-    /* Other control flags */
-    _r.report[2] = 0x00;
-    /* Audio control - disabled for now */
-    _r.report[3] = 0x00;
-
-    return _r;
-}
-void ds4_set_vibration(ds4_message *_r, uint8_t right_motor, uint8_t left_motor)
-{
-    _r->hid_report.report[4] = right_motor;
-    _r->hid_report.report[5] = left_motor;
+ds4_output_report ds4_create_oreport(void) {
+    ds4_output_report r;
+    memset(r.report, 0, 32);
+    r.report[0] = 0x05; // Report header
+    r.report[1] = 0x07; // Flags
+    return r;
 }
 
-
-
-void ds4_set_led(ds4_message *_r, uint8_t r, uint8_t g, uint8_t b)
-{
-    /*RGB*/
-    _r->hid_report.report[6] = r;
-    _r->hid_report.report[7] = g;
-    _r->hid_report.report[8] = b;
+ds4_message ds4_begin_message(void) {
+    ds4_message msg = { .hid_report = ds4_create_oreport() };
+    return msg;
 }
 
-ds4_message ds4_begin_message(void)
-{
-    ds4_output_report report_begin = ds4_create_oreport();
-    ds4_message message = {.hid_report = report_begin};
-    return message;
+void ds4_set_vibration(ds4_message* msg, uint8_t right, uint8_t left) {
+    msg->hid_report.report[4] = right;
+    msg->hid_report.report[5] = left;
 }
 
-int ds4_flush_report(ds4_handle *dev, ds4_message *data)
-{
-    int res = hid_write(dev->handle, data->hid_report.report, DS4_OUTPUT_REPORT_SIZE);
-    if (res < 0)
-    {
-        return 0;
+void ds4_set_led(ds4_message* msg, uint8_t r, uint8_t g, uint8_t b) {
+    msg->hid_report.report[6] = r;
+    msg->hid_report.report[7] = g;
+    msg->hid_report.report[8] = b;
+}
+
+void ds4_enable_flash(ds4_message* msg, uint8_t flash_on, uint8_t flash_off, bool on) {
+    if (on) {
+        msg->hid_report.report[9] = flash_on;
+        msg->hid_report.report[10] = flash_off;
+    } else {
+        msg->hid_report.report[9] = 0;
+        msg->hid_report.report[10] = 0;
     }
-    return 1;
 }
 
-int ds4_send_commands(ds4_handle *dev, ds4_message *message)
-{
-    if(!ds4_flush_report(dev, message))
-    {
-        return 0;
-    }
-    return 1;
-}
-
-void ds4_enable_flash(ds4_message *out_report, uint8_t flash_on, uint8_t flash_off, bool on)
-{
-    if (on)
-    {
-        out_report->hid_report.report[9] = flash_on;
-        out_report->hid_report.report[10] = flash_off;
-    }
-    else
-    {
-        out_report->hid_report.report[9] = 0x00;
-        out_report->hid_report.report[10] = 0x00;
-    }
+int ds4_send_commands(ds4_handle* dev, ds4_message* msg) {
+    int res = hid_write(dev->handle, msg->hid_report.report, 32);
+    return res >= 0 ? 1 : 0;
 }

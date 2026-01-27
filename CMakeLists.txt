@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(BUILD_SHARED_LIBS OFF)
 
+# Fetch CPM
 if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/cmake/CPM.cmake")
     file(DOWNLOAD
         "https://github.com/cpm-cmake/CPM.cmake/releases/latest/download/get_cpm.cmake"
@@ -14,16 +15,18 @@ if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/cmake/CPM.cmake")
 endif()
 include(cmake/CPM.cmake)
 
+# HIDAPI (PRIVATE)
 CPMAddPackage(
     NAME hidapi
     GITHUB_REPOSITORY libusb/hidapi
-    DEPTH 1
     GIT_TAG master
     OPTIONS
         "HIDAPI_BUILD_TESTS OFF"
-        "HIDAPI_SHARED OFF"
+        "HIDAPI_ENABLE_SHARED OFF"
+        "HIDAPI_ENABLE_STATIC ON"
 )
 
+# DS4 C library
 add_library(ds4 STATIC
     src/ds4/ds4_identify.c
     src/ds4/ds4_handle.c
@@ -31,23 +34,29 @@ add_library(ds4 STATIC
     src/ds4/ds4_input.c
     src/ds4/ds4_controls.c
 )
-target_include_directories(ds4 PUBLIC include)
+
+target_include_directories(ds4 PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+target_include_directories(ds4 PRIVATE
+    ${hidapi_SOURCE_DIR}
+)
 target_link_libraries(ds4 PRIVATE hidapi::hidapi)
 
+# DS4 C++ wrapper
 add_library(ds4pp STATIC
     src/ds4pp/Device.cpp
 )
-target_include_directories(ds4pp PUBLIC include)
+target_include_directories(ds4pp PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 target_link_libraries(ds4pp PRIVATE ds4)
 
+# Optional tests
 option(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)
-    message("Building tests")
     add_executable(cpp_test
         tests/cpp_test.cpp
     )
-    target_link_libraries(cpp_test PRIVATE
-        ds4pp
-    )
-
+    target_link_libraries(cpp_test PRIVATE ds4pp)
 endif()
