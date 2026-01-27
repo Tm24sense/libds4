@@ -59,4 +59,13 @@ if(BUILD_TESTS)
         tests/cpp_test.cpp
     )
     target_link_libraries(cpp_test PRIVATE ds4pp)
+    add_executable(commands
+        tests/commands.c
+    )
+    target_link_libraries(commands PRIVATE ds4)
+    add_executable(debug_menu
+        tests/debug_menu.c
+    )
+    target_link_libraries(debug_menu PRIVATE ds4)
+    
 endif()
