@@ -2,20 +2,23 @@ set_project("libds4")
 set_version("1.0.0")
 set_languages("c11", "c++17")
 add_rules("mode.debug", "mode.release")
+
+
 add_requires("hidapi")
-
-
 target("ds4")
     set_kind("static")
     add_files("src/ds4/*.c")
     add_includedirs("include", {public = true})
     add_packages("hidapi")
+    add_headerfiles("include/(ds4/*.h)")
 
 target("ds4pp")
     set_kind("static")
     add_files("src/ds4pp/Device.cpp")
     add_includedirs("include", {public = true})
     add_deps("ds4") 
+    add_headerfiles("include/(ds4pp/*.hpp)")
+
 
 option("build_tests")
     set_default(false)
