@@ -23,6 +23,8 @@ CPMAddPackage(
         "HIDAPI_ENABLE_SHARED OFF"
         "HIDAPI_ENABLE_STATIC ON"
 )
+
+
 add_library(ds4 STATIC
     src/ds4/ds4_identify.c
     src/ds4/ds4_handle.c
@@ -33,6 +35,9 @@ add_library(ds4 STATIC
 
 target_include_directories(ds4 PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+target_include_directories(ds4 PRIVATE
+    ${hidapi_SOURCE_DIR}
 )
 target_link_libraries(ds4 PRIVATE hidapi::hidapi)
 
