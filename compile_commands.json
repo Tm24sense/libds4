@@ -1,0 +1,46 @@
+[
+{
+  "directory": "C:\\Users\\Tayem\\Documents\\libds4",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/MD", "/O2", "/std:c11", "/Iinclude", "/DNDEBUG", "/Fobuild\\.objs\\commands\\windows\\x64\\release\\tests\\commands.c.obj", "tests\\commands.c"],
+  "file": "tests\\commands.c"
+},
+{
+  "directory": "C:\\Users\\Tayem\\Documents\\libds4",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/MD", "/O2", "/std:c++17", "/Iinclude", "/EHsc", "/DNDEBUG", "/Fobuild\\.objs\\cpp_test\\windows\\x64\\release\\tests\\cpp_test.cpp.obj", "tests\\cpp_test.cpp"],
+  "file": "tests\\cpp_test.cpp"
+},
+{
+  "directory": "C:\\Users\\Tayem\\Documents\\libds4",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/MD", "/O2", "/std:c11", "/Iinclude", "/ID:\\vcpkg\\installed\\x64-windows-static-md\\include", "/DNDEBUG", "/Fobuild\\.objs\\ds4\\windows\\x64\\release\\src\\ds4\\ds4_controls.c.obj", "src\\ds4\\ds4_controls.c"],
+  "file": "src\\ds4\\ds4_controls.c"
+},
+{
+  "directory": "C:\\Users\\Tayem\\Documents\\libds4",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/MD", "/O2", "/std:c11", "/Iinclude", "/ID:\\vcpkg\\installed\\x64-windows-static-md\\include", "/DNDEBUG", "/Fobuild\\.objs\\ds4\\windows\\x64\\release\\src\\ds4\\ds4_handle.c.obj", "src\\ds4\\ds4_handle.c"],
+  "file": "src\\ds4\\ds4_handle.c"
+},
+{
+  "directory": "C:\\Users\\Tayem\\Documents\\libds4",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/MD", "/O2", "/std:c11", "/Iinclude", "/ID:\\vcpkg\\installed\\x64-windows-static-md\\include", "/DNDEBUG", "/Fobuild\\.objs\\ds4\\windows\\x64\\release\\src\\ds4\\ds4_identify.c.obj", "src\\ds4\\ds4_identify.c"],
+  "file": "src\\ds4\\ds4_identify.c"
+},
+{
+  "directory": "C:\\Users\\Tayem\\Documents\\libds4",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/MD", "/O2", "/std:c11", "/Iinclude", "/ID:\\vcpkg\\installed\\x64-windows-static-md\\include", "/DNDEBUG", "/Fobuild\\.objs\\ds4\\windows\\x64\\release\\src\\ds4\\ds4_input.c.obj", "src\\ds4\\ds4_input.c"],
+  "file": "src\\ds4\\ds4_input.c"
+},
+{
+  "directory": "C:\\Users\\Tayem\\Documents\\libds4",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/MD", "/O2", "/std:c11", "/Iinclude", "/ID:\\vcpkg\\installed\\x64-windows-static-md\\include", "/DNDEBUG", "/Fobuild\\.objs\\ds4\\windows\\x64\\release\\src\\ds4\\ds4_output.c.obj", "src\\ds4\\ds4_output.c"],
+  "file": "src\\ds4\\ds4_output.c"
+},
+{
+  "directory": "C:\\Users\\Tayem\\Documents\\libds4",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/MD", "/O2", "/std:c11", "/Iinclude", "/DNDEBUG", "/Fobuild\\.objs\\debug_menu\\windows\\x64\\release\\tests\\debug_menu.c.obj", "tests\\debug_menu.c"],
+  "file": "tests\\debug_menu.c"
+},
+{
+  "directory": "C:\\Users\\Tayem\\Documents\\libds4",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/MD", "/O2", "/std:c++17", "/Iinclude", "/EHsc", "/DNDEBUG", "/Fobuild\\.objs\\ds4pp\\windows\\x64\\release\\src\\ds4pp\\Device.cpp.obj", "src\\ds4pp\\Device.cpp"],
+  "file": "src\\ds4pp\\Device.cpp"
+}]

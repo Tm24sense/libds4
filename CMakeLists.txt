@@ -23,8 +23,6 @@ CPMAddPackage(
         "HIDAPI_ENABLE_SHARED OFF"
         "HIDAPI_ENABLE_STATIC ON"
 )
-
-
 add_library(ds4 STATIC
     src/ds4/ds4_identify.c
     src/ds4/ds4_handle.c
