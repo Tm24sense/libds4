@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <hidapi.h>
+#include <ds4/ds4_build_config.h>
 #include <ds4/ds4_identify.h>
 #include <ds4/ds4_private.h>
 

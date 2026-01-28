@@ -1,5 +1,5 @@
 #pragma once
-#include <hidapi.h>
+#include <ds4/ds4_build_config.h>
 #include <ds4/ds4_models.h>
 #include <ds4/ds4_input.h>
 #include <ds4/ds4_output.h>

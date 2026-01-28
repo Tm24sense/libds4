@@ -8,6 +8,7 @@ add_rules("mode.debug", "mode.release")
 add_requires("hidapi", {configs = {shared = false}})
 
 
+
 option("build_shared")
     set_default(false)
     set_showmenu(true)
@@ -19,6 +20,7 @@ option("build_tests")
     set_description("Build test executables")
 option_end()
 target("libds4")
+    add_defines("USING_XMAKE")
     if has_config("build_shared") then
         set_kind("shared")
         add_defines("DS4_BUILD_DLL")
@@ -32,6 +34,7 @@ target("libds4")
     add_headerfiles("include/(ds4/*.h)")
 
 target("ds4pp")
+    add_defines("USING_XMAKE")
     set_kind("static")
     add_files("src/ds4pp/Device.cpp")
     add_includedirs("include", {public = true})
