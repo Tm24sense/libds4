@@ -1,11 +1,7 @@
 #pragma once
-
-/* DS4_API: portable symbol export/import macro
- * - When building the ds4 shared library, define DS4_BUILD_DLL so
- *   exported symbols use __declspec(dllexport) on Windows.
- * - Consumers linking against the DLL will get __declspec(dllimport).
- */
-#if defined(_WIN32) || defined(__CYGWIN__)
+#if defined(DS4_STATIC)
+  #define DS4_API
+#elif defined(_WIN32) || defined(__CYGWIN__)
   #ifdef DS4_BUILD_DLL
     #define DS4_API __declspec(dllexport)
   #else
