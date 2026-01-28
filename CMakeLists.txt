@@ -20,16 +20,17 @@ include(cmake/CPM.cmake)
 
 set(HIDAPI_BUILD_SHARED OFF CACHE BOOL "" FORCE)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
 CPMAddPackage(
     NAME hidapi
     GITHUB_REPOSITORY libusb/hidapi
     GIT_TAG master
+    DEPTH 1
     OPTIONS
         "HIDAPI_BUILD_TESTS OFF"
         "HIDAPI_ENABLE_SHARED OFF"
         "HIDAPI_ENABLE_STATIC ON"
 )
-
 if(BUILD_SHARED)
     add_library(ds4 SHARED
         src/ds4/ds4_identify.c
@@ -58,6 +59,17 @@ target_include_directories(ds4 PUBLIC
 
 target_link_libraries(ds4 PRIVATE hidapi::hidapi)
 
+if(TARGET hidapi::hidapi)
+    get_target_property(HIDAPI_INCLUDE_DIRS hidapi::hidapi INTERFACE_INCLUDE_DIRECTORIES)
+    if(HIDAPI_INCLUDE_DIRS)
+        target_include_directories(ds4 PRIVATE ${HIDAPI_INCLUDE_DIRS})
+    endif()
+endif()
+
+target_include_directories(ds4 PRIVATE 
+    ${hidapi_SOURCE_DIR}/hidapi
+)
+
 add_library(ds4pp STATIC
     src/ds4pp/Device.cpp
 )
@@ -84,4 +96,3 @@ if(BUILD_TESTS)
     add_executable(touchpad_test tests/touchpad_test.cpp)
     target_link_libraries(touchpad_test PRIVATE ds4pp)
 endif()
-
