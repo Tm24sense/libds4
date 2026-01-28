@@ -3,6 +3,7 @@
 #include <memory.h>
 #include <stdint.h>
 #include <ds4/ds4_models.h>
+#include <ds4/ds4_export.h>
 
 typedef struct ds4_handle ds4_handle;
 
@@ -93,9 +94,9 @@ typedef struct ds4_state {
     
 } ds4_state;
 
-ds4_state ds4_update(ds4_handle* handle);
+DS4_API ds4_state ds4_update(ds4_handle* handle);
 
-ds4_input_report ds4_read_ireport(ds4_handle *dev);
+DS4_API ds4_input_report ds4_read_ireport(ds4_handle *dev);
 
-ds4_state ds4_parse_state(ds4_input_report *input);
-Touchpad_t parse_touchpad_data(ds4_input_report *_R);
+DS4_API ds4_state ds4_parse_state(ds4_input_report *input);
+DS4_API Touchpad_t parse_touchpad_data(ds4_input_report *_R);

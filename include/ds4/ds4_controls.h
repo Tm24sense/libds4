@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <ds4/ds4_export.h>
 
 typedef struct ds4_state ds4_state;
 
@@ -43,15 +44,14 @@ typedef struct ds4_motion_t
     int16_t x, y, z;
 } ds4_motion_t;
 
-int ds4_button_pressed(ds4_state *state, DS4_Buttons btn);
-int ds4_buttons_pressed(ds4_state *state, DS4_Buttons *buttons, int count);
-ds4_motion_t ds4_gyro_query(ds4_state *state);
-ds4_motion_t ds4_accel_query(ds4_state *state);
-int ds4_headphones_present(ds4_state *state);
-int ds4_microphone_present(ds4_state *state);
-int ds4_btn_state(ds4_state *state);
-uint8_t ds4_battery_level(ds4_state *state);
-float ds4_battery_level_percentage(ds4_state *state);
-uint8_t ds4_get_temperature(ds4_state *state);
-ds4_point ds4_left_stick(ds4_state *state);
-ds4_point ds4_right_stick(ds4_state *state);
+DS4_API int ds4_button_pressed(ds4_state *state, DS4_Buttons btn);
+DS4_API int ds4_buttons_pressed(ds4_state *state, DS4_Buttons *buttons, int count);
+DS4_API ds4_motion_t ds4_gyro_query(ds4_state *state);
+DS4_API ds4_motion_t ds4_accel_query(ds4_state *state);
+DS4_API int ds4_headphones_present(ds4_state *state);
+DS4_API int ds4_microphone_present(ds4_state *state);
+DS4_API int ds4_btn_state(ds4_state *state);
+DS4_API uint8_t ds4_battery_level(ds4_state *state);
+DS4_API float ds4_battery_level_percentage(ds4_state *state);
+DS4_API ds4_point ds4_left_stick(ds4_state *state);
+DS4_API ds4_point ds4_right_stick(ds4_state *state);

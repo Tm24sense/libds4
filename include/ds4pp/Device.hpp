@@ -4,8 +4,7 @@
 #include <cstdint>
 #include <tuple>
 #include <vector>
-
-
+#include <ds4/ds4_export.h>
 #include <ds4pp/Input.hpp>
 #include <ds4pp/Models.hpp>
 #include <ds4pp/TouchPad.hpp>
@@ -13,7 +12,7 @@
 
 namespace DS4 {
 
-class DualShock4 {
+class DS4_API DualShock4 {
 public:
   DualShock4();
   ~DualShock4();
