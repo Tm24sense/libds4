@@ -4,9 +4,9 @@
 #define DS4_BUILD_CONFIG_H
 
 #ifdef USING_XMAKE
-    #define HIDAPI_INCLUDE <hidapi/hidapi.h>
+    #include <hidapi/hidapi.h>
 #else
-    #define HIDAPI_INCLUDE <hidapi.h>
+    #include <hidapi.h>
 #endif
 
 #endif // DS4_BUILD_CONFIG_H
