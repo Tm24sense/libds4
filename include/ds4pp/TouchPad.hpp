@@ -1,6 +1,4 @@
 #pragma once
-#include <array>
-
 namespace DS4
 {
 
@@ -10,10 +8,5 @@ namespace DS4
         bool active;
         int x;
         int y;
-    };
-
-    struct TouchPadState
-    {
-        std::array<TouchPoint, 2> States;
     };
 }

@@ -40,4 +40,8 @@ if has_config("build_tests") then
         set_kind("binary")
         add_files("tests/debug_menu.c")
         add_deps("ds4")
+    target("touchpad_test")
+        set_kind("binary")
+        add_files("tests/touchpad_test.cpp")
+        add_deps("ds4pp")
 end

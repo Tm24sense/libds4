@@ -1,52 +1,53 @@
 #pragma once
 
-#include <vector>
-#include <tuple>
 #include <chrono>
 #include <cstdint>
+#include <tuple>
+#include <vector>
+
 
 #include <ds4pp/Input.hpp>
-#include <ds4pp/TouchPad.hpp>
 #include <ds4pp/Models.hpp>
+#include <ds4pp/TouchPad.hpp>
+
 
 namespace DS4 {
 
 class DualShock4 {
 public:
-    DualShock4();
-    ~DualShock4();
+  DualShock4();
+  ~DualShock4();
 
-    void Connect();
-    void Rumble(std::byte RightMotor,
-                std::byte LeftMotor,
-                std::chrono::duration<double> duration);
-    void EndRumble();
+  void Connect();
+  void Rumble(std::byte RightMotor, std::byte LeftMotor,
+              std::chrono::duration<double> duration);
+  void EndRumble();
 
-    uint8_t GetBatteryLevel();
-    TouchPadState GetTouchPadState();
+  uint8_t GetBatteryLevel();
+  std::tuple<TouchPoint, TouchPoint> GetTouchPadState();
 
-    std::tuple<int16_t,int16_t,int16_t> GetGyroData();
-    std::tuple<int16_t,int16_t,int16_t> GetAccelData();
+  std::tuple<int16_t, int16_t, int16_t> GetGyroData();
+  std::tuple<int16_t, int16_t, int16_t> GetAccelData();
 
-    Models GetDeviceModel();
+  Models GetDeviceModel();
 
-    void SetLed(uint8_t r, uint8_t g, uint8_t b);
-    void EnableFlash(bool enabled);
-    bool IsFlashEnabled();
-    void SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff);
+  void SetLed(uint8_t r, uint8_t g, uint8_t b);
+  void EnableFlash(bool enabled);
+  bool IsFlashEnabled();
+  void SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff);
 
-    void SendCommandBuffer();
+  void SendCommandBuffer();
 
-    bool IsButtonPressed(ControllerButton Button);
-    bool AreButtonsPressed(std::vector<ControllerButton>& Buttons);
+  bool IsButtonPressed(ControllerButton Button);
+  bool AreButtonsPressed(std::vector<ControllerButton> &Buttons);
 
-    void Update();
+  void Update();
 
 private:
-    bool IsTimeEnd();
+  bool IsTimeEnd();
 
-    struct Impl;
-    Impl* impl;
+  struct Impl;
+  Impl *impl;
 };
 
-}
+} // namespace DS4

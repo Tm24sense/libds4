@@ -3,3 +3,5 @@ build/
 CMakeUserPresets.json
 .vscode/
 .xmake/
+.cache/
+compile_commands.json

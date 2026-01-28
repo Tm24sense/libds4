@@ -98,4 +98,4 @@ ds4_state ds4_update(ds4_handle* handle);
 ds4_input_report ds4_read_ireport(ds4_handle *dev);
 
 ds4_state ds4_parse_state(ds4_input_report *input);
-Touchpad_t parse_touchpad_data();
+Touchpad_t parse_touchpad_data(ds4_input_report *_R);
