@@ -5,3 +5,4 @@ CMakeUserPresets.json
 .xmake/
 .cache/
 compile_commands.json
+tests/gui_debug_menu.cpp
