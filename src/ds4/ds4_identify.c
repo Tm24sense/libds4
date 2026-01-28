@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <hidapi/hidapi.h>
+#include <hidapi.h>
 #include <ds4/ds4_identify.h>
 #include <ds4/ds4_private.h>
 

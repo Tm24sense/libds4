@@ -73,7 +73,8 @@ target_include_directories(ds4 PRIVATE
 add_library(ds4pp STATIC
     src/ds4pp/Device.cpp
 )
-
+add_library(libds4::ds4 ALIAS ds4)
+add_library(libds4::ds4pp ALIAS ds4pp)
 target_include_directories(ds4pp PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )

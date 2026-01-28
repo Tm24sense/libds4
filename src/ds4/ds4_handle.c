@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <wchar.h>
-#include <hidapi/hidapi.h>
+#include <hidapi.h>
 #include "ds4/ds4_handle.h"
 #include "ds4/ds4_private.h"
 #include "ds4/ds4_identify.h"

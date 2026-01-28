@@ -2,7 +2,7 @@
 #include "ds4/ds4_output.h"
 #include "ds4/ds4_handle.h"
 #include "ds4/ds4_private.h"
-#include <hidapi/hidapi.h>
+#include <hidapi.h>
 
 DS4_API ds4_output_report ds4_create_oreport(void) {
     ds4_output_report r;
