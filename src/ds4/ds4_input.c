@@ -2,21 +2,21 @@
 #include <ds4/ds4_input.h>
 #include <ds4/ds4_handle.h>
 #include <ds4/ds4_private.h>
-ds4_input_report ds4_read_ireport(ds4_handle *dev)
+DS4_API ds4_input_report ds4_read_ireport(ds4_handle *dev)
 {
     ds4_input_report _rep;
     hid_read(dev->handle, _rep.report, DS4_INPUT_REPORT_SIZE);
     return _rep;
 }
 
-ds4_state ds4_update(ds4_handle *handle)
+DS4_API ds4_state ds4_update(ds4_handle *handle)
 {
     ds4_input_report input_report = ds4_read_ireport(handle);
     ds4_state state = ds4_parse_state(&input_report);
     return state;
 }
 
-ds4_state ds4_parse_state(ds4_input_report *input)
+DS4_API ds4_state ds4_parse_state(ds4_input_report *input)
 {
     ds4_state state = {0};
 
@@ -74,7 +74,7 @@ ds4_state ds4_parse_state(ds4_input_report *input)
     return state;
 }
 
-Touchpad_t parse_touchpad_data(ds4_input_report *_R)
+DS4_API Touchpad_t parse_touchpad_data(ds4_input_report *_R)
 {
     Touchpad_t tp;
 

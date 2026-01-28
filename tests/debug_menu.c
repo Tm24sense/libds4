@@ -17,7 +17,6 @@ int main(void)
         printf("\033[H\033[J");
         printf("--- DualShock 4 Debug ---\n");
         printf("Battery Level: %.1f%%\n", ds4_battery_level_percentage(&state));
-        printf("Controller Temperature: %d\n", ds4_get_temperature(&state));
         printf("Headphones Present: %d\n", ds4_headphones_present(&state));
         printf("D-Pad State: %d\n", state.dpad_state);
         printf("Square Pressed: %d\n", ds4_btn_state(&state));

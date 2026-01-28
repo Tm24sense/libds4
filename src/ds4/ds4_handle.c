@@ -5,7 +5,7 @@
 #include "ds4/ds4_private.h"
 #include "ds4/ds4_identify.h"
 
-ds4_handle* ds4_open_device(void) {
+DS4_API ds4_handle* ds4_open_device(void) {
     int pid = ds4_scan_devices();
     if (!pid) return NULL;
 
@@ -30,7 +30,7 @@ ds4_handle* ds4_open_device(void) {
     return handle;
 }
 
-void ds4_destroy_handle(ds4_handle* handle) {
+DS4_API void ds4_destroy_handle(ds4_handle* handle) {
     if (!handle) return;
     hid_close(handle->handle);
     free(handle->serial_number);

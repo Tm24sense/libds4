@@ -3,7 +3,7 @@
 #include <ds4/ds4_identify.h>
 #include <ds4/ds4_private.h>
 
-ds4_device_type pid_to_ds4_model(unsigned short pid)
+DS4_API ds4_device_type pid_to_ds4_model(unsigned short pid)
 {
     switch (pid) {
     case DS4_ORIGNAL_PID:
@@ -15,12 +15,12 @@ ds4_device_type pid_to_ds4_model(unsigned short pid)
     }
 }
 
-ds4_device_type ds4_get_model(ds4_handle *device)
+DS4_API ds4_device_type ds4_get_model(ds4_handle *device)
 {
     return device->dev_type;
 }
 
-int ds4_scan_devices(void)
+DS4_API int ds4_scan_devices(void)
 {
     hid_init();
     unsigned short pids[] = {DS4_ORIGNAL_PID, DS4_SLIM_PID};

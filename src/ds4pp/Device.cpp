@@ -19,17 +19,17 @@ struct DualShock4::Impl {
   std::chrono::high_resolution_clock::time_point clock_end{};
 };
 
-DualShock4::DualShock4() : impl(new Impl{}) {
+DS4_API DualShock4::DualShock4() : impl(new Impl{}) {
   impl->output = ds4_begin_message();
 }
 
-DualShock4::~DualShock4() {
+DS4_API DualShock4::~DualShock4() {
   if (impl->handle)
     ds4_destroy_handle(impl->handle);
   delete impl;
 }
 
-void DualShock4::Connect() {
+DS4_API void DualShock4::Connect() {
   impl->handle = ds4_open_device();
   if (!impl->handle) {
     throw std::runtime_error(
@@ -37,7 +37,7 @@ void DualShock4::Connect() {
   }
 }
 
-void DualShock4::Rumble(std::byte RightMotor, std::byte LeftMotor,
+DS4_API void DualShock4::Rumble(std::byte RightMotor, std::byte LeftMotor,
                         std::chrono::duration<double> duration) {
   impl->clock_end =
       std::chrono::high_resolution_clock::now() +
@@ -48,16 +48,16 @@ void DualShock4::Rumble(std::byte RightMotor, std::byte LeftMotor,
                     std::to_integer<uint8_t>(LeftMotor));
 }
 
-void DualShock4::EndRumble() {
+DS4_API void DualShock4::EndRumble() {
   impl->output.hid_report.report[4] = 0x00;
   impl->output.hid_report.report[5] = 0x00;
 }
 
-uint8_t DualShock4::GetBatteryLevel() {
+DS4_API uint8_t DualShock4::GetBatteryLevel() {
   return ds4_battery_level(&impl->state);
 }
 
-std::tuple<TouchPoint, TouchPoint> DualShock4::GetTouchPadState() {
+DS4_API std::tuple<TouchPoint, TouchPoint> DualShock4::GetTouchPadState() {
   TouchPoint Finger0{};
   TouchPoint Finger1{};
 
@@ -75,17 +75,17 @@ std::tuple<TouchPoint, TouchPoint> DualShock4::GetTouchPadState() {
   return {Finger0, Finger1};
 }
 
-std::tuple<int16_t, int16_t, int16_t> DualShock4::GetGyroData() {
+DS4_API std::tuple<int16_t, int16_t, int16_t> DualShock4::GetGyroData() {
   ds4_motion_t g = ds4_gyro_query(&impl->state);
   return {g.x, g.y, g.z};
 }
 
-std::tuple<int16_t, int16_t, int16_t> DualShock4::GetAccelData() {
+DS4_API std::tuple<int16_t, int16_t, int16_t> DualShock4::GetAccelData() {
   ds4_motion_t a = ds4_accel_query(&impl->state);
   return {a.x, a.y, a.z};
 }
 
-Models DualShock4::GetDeviceModel() {
+DS4_API Models DualShock4::GetDeviceModel() {
   switch (ds4_get_model(impl->handle)) {
   case DS4_ORIGNAL:
     return Models::Orignal;
@@ -96,32 +96,32 @@ Models DualShock4::GetDeviceModel() {
     return Models::None;
   }
 }
-void DualShock4::SetLed(uint8_t r, uint8_t g, uint8_t b) {
+DS4_API void DualShock4::SetLed(uint8_t r, uint8_t g, uint8_t b) {
   ds4_set_led(&impl->output, r, g, b);
 }
 
-void DualShock4::EnableFlash(bool enabled) {
+DS4_API void DualShock4::EnableFlash(bool enabled) {
   impl->flash_enabled = enabled;
   ds4_enable_flash(&impl->output, enabled ? 255 : 0, enabled ? 255 : 0,
                    enabled);
 }
 
-bool DualShock4::IsFlashEnabled() { return impl->flash_enabled; }
+DS4_API bool DualShock4::IsFlashEnabled() { return impl->flash_enabled; }
 
-void DualShock4::SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff) {
+DS4_API void DualShock4::SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff) {
   ds4_enable_flash(&impl->output, (FlashDurationOn), FlashDurationOff, true);
 }
 
-void DualShock4::SendCommandBuffer() {
+DS4_API void DualShock4::SendCommandBuffer() {
   if (!ds4_send_commands(impl->handle, &impl->output))
     throw std::runtime_error("Device removed or disconnected");
 }
 
-bool DualShock4::IsButtonPressed(ControllerButton Button) {
+DS4_API bool DualShock4::IsButtonPressed(ControllerButton Button) {
   return ds4_button_pressed(&impl->state, static_cast<DS4_Buttons>(Button));
 }
 
-bool DualShock4::AreButtonsPressed(std::vector<ControllerButton> &Buttons) {
+DS4_API bool DualShock4::AreButtonsPressed(std::vector<ControllerButton> &Buttons) {
   for (ControllerButton _button : Buttons) {
     DS4_Buttons b = static_cast<DS4_Buttons>(_button);
     switch (b) {
@@ -209,14 +209,14 @@ bool DualShock4::AreButtonsPressed(std::vector<ControllerButton> &Buttons) {
   return true;
 }
 
-void DualShock4::Update() {
+DS4_API void DualShock4::Update() {
   if (IsTimeEnd())
     EndRumble();
 
   impl->state = ds4_update(impl->handle);
 }
 
-bool DualShock4::IsTimeEnd() {
+DS4_API bool DualShock4::IsTimeEnd() {
   return impl->clock_end <= std::chrono::high_resolution_clock::now();
 }
 
