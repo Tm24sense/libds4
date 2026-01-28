@@ -18,7 +18,7 @@ option("build_tests")
     set_showmenu(true)
     set_description("Build test executables")
 option_end()
-target("ds4")
+target("libds4")
     if has_config("build_shared") then
         set_kind("shared")
         add_defines("DS4_BUILD_DLL")
@@ -32,15 +32,10 @@ target("ds4")
     add_headerfiles("include/(ds4/*.h)")
 
 target("ds4pp")
-    if has_config("build_shared") then
-        set_kind("shared")
-        add_defines("DS4_BUILD_DLL")
-    else 
-        set_kind("static")
-    end 
+    set_kind("static")
     add_files("src/ds4pp/Device.cpp")
     add_includedirs("include", {public = true})
-    add_deps("ds4") 
+    add_deps("libds4") 
     add_headerfiles("include/(ds4pp/*.hpp)")
 
 if has_config("build_tests") then
@@ -49,18 +44,17 @@ if has_config("build_tests") then
         set_kind("binary")
         add_files("tests/cpp_test.cpp")
         add_deps("ds4pp")
-
     target("commands")
         set_default(false)
         set_kind("binary")
         add_files("tests/commands.c")
-        add_deps("ds4")
+        add_deps("libds4")
 
     target("debug_menu")
         set_default(false)
         set_kind("binary")
         add_files("tests/debug_menu.c")
-        add_deps("ds4")
+        add_deps("libds4")
     target("touchpad_test")
         set_default(false)
         set_kind("binary")

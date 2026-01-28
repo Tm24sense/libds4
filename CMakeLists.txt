@@ -9,7 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(BUILD_SHARED "Build libds4 as a shared library" OFF)
 option(BUILD_TESTS "Build test executables" OFF)
 
-# CPM Setup
 if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/cmake/CPM.cmake")
     file(DOWNLOAD
         "https://github.com/cpm-cmake/CPM.cmake/releases/latest/download/get_cpm.cmake"
@@ -21,7 +20,6 @@ include(cmake/CPM.cmake)
 
 set(HIDAPI_BUILD_SHARED OFF CACHE BOOL "" FORCE)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-
 CPMAddPackage(
     NAME hidapi
     GITHUB_REPOSITORY libusb/hidapi
@@ -32,7 +30,6 @@ CPMAddPackage(
         "HIDAPI_ENABLE_STATIC ON"
 )
 
-# ds4 library
 if(BUILD_SHARED)
     add_library(ds4 SHARED
         src/ds4/ds4_identify.c
@@ -42,6 +39,7 @@ if(BUILD_SHARED)
         src/ds4/ds4_controls.c
     )
     target_compile_definitions(ds4 PRIVATE DS4_BUILD_DLL)
+    set_target_properties(ds4 PROPERTIES OUTPUT_NAME "libds4")
 else()
     add_library(ds4 STATIC
         src/ds4/ds4_identify.c
@@ -51,6 +49,7 @@ else()
         src/ds4/ds4_controls.c
     )
     target_compile_definitions(ds4 PUBLIC DS4_STATIC)
+    set_target_properties(ds4 PROPERTIES OUTPUT_NAME "libds4")
 endif()
 
 target_include_directories(ds4 PUBLIC
@@ -59,18 +58,9 @@ target_include_directories(ds4 PUBLIC
 
 target_link_libraries(ds4 PRIVATE hidapi::hidapi)
 
-# ds4pp library
-if(BUILD_SHARED)
-    add_library(ds4pp SHARED
-        src/ds4pp/Device.cpp
-    )
-    target_compile_definitions(ds4pp PRIVATE DS4_BUILD_DLL)
-else()
-    add_library(ds4pp STATIC
-        src/ds4pp/Device.cpp
-    )
-    target_compile_definitions(ds4pp PUBLIC DS4_STATIC)
-endif()
+add_library(ds4pp STATIC
+    src/ds4pp/Device.cpp
+)
 
 target_include_directories(ds4pp PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -78,6 +68,9 @@ target_include_directories(ds4pp PUBLIC
 
 target_link_libraries(ds4pp PUBLIC ds4)
 
+set_target_properties(ds4pp PROPERTIES OUTPUT_NAME "libds4pp")
+
+# Tests
 if(BUILD_TESTS)
     add_executable(cpp_test tests/cpp_test.cpp)
     target_link_libraries(cpp_test PRIVATE ds4pp)
@@ -91,3 +84,4 @@ if(BUILD_TESTS)
     add_executable(touchpad_test tests/touchpad_test.cpp)
     target_link_libraries(touchpad_test PRIVATE ds4pp)
 endif()
+
