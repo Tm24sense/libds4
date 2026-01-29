@@ -2,7 +2,7 @@
 #include <ds4/ds4_input.h>
 #include <ds4/ds4_export.h>
 
-DS4_API int ds4_button_pressed(ds4_state *state, DS4_Buttons btn)
+DS4_API int ds4_button_pressed(const ds4_state *state, const DS4_Buttons btn)
 {
     switch (btn)
     {

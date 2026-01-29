@@ -6,3 +6,4 @@ CMakeUserPresets.json
 .cache/
 compile_commands.json
 tests/gui_debug_menu.cpp
+.idea/

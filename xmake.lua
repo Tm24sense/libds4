@@ -10,7 +10,7 @@ option("build_shared")
 option_end()
 
 option("build_tests")
-    set_default(false)
+    set_default(true)
     set_showmenu(true)
     set_description("Build test executables")
 option_end()

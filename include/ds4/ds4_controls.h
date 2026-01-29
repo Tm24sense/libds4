@@ -44,7 +44,7 @@ typedef struct ds4_motion_t
     int16_t x, y, z;
 } ds4_motion_t;
 
-DS4_API int ds4_button_pressed(ds4_state *state, DS4_Buttons btn);
+DS4_API int ds4_button_pressed(const ds4_state *state, DS4_Buttons btn);
 DS4_API int ds4_buttons_pressed(ds4_state *state, DS4_Buttons *buttons, int count);
 DS4_API ds4_motion_t ds4_gyro_query(ds4_state *state);
 DS4_API ds4_motion_t ds4_accel_query(ds4_state *state);
