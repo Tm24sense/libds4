@@ -16,25 +16,25 @@ public:
   DualShock4();
   ~DualShock4();
 
-  void Connect();
-  void Rumble(std::byte RightMotor, std::byte LeftMotor,
-              std::chrono::duration<double> duration);
-  void EndRumble();
+  bool Connect() const;
+  void Rumble(uint8_t RightMotor, uint8_t LeftMotor,
+              std::chrono::duration<double> duration) const;
+  void EndRumble() const;
 
-  uint8_t GetBatteryLevel();
-  std::tuple<TouchPoint, TouchPoint> GetTouchPadState();
+  [[nodiscard]] uint8_t GetBatteryLevel() const;
+  [[nodiscard]] std::tuple<TouchPoint, TouchPoint> GetTouchPadState() const;
 
-  std::tuple<int16_t, int16_t, int16_t> GetGyroData();
-  std::tuple<int16_t, int16_t, int16_t> GetAccelData();
+  [[nodiscard]] std::tuple<int16_t, int16_t, int16_t> GetGyroData() const;
+  [[nodiscard]] std::tuple<int16_t, int16_t, int16_t> GetAccelData() const;
 
-  Models GetDeviceModel();
+  [[nodiscard]] Models GetDeviceModel() const;
 
-  void SetLed(uint8_t r, uint8_t g, uint8_t b);
+  void SetLed(uint8_t r, uint8_t g, uint8_t b) const;
   void EnableFlash(bool enabled);
-  bool IsFlashEnabled();
-  void SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff);
+  [[nodiscard]] bool IsFlashEnabled() const;
+  void SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff) const;
 
-  void SendCommandBuffer();
+  bool SendCommandBuffer();
 
   bool IsButtonPressed(ControllerButton Button);
   bool AreButtonsPressed(std::vector<ControllerButton> &Buttons);

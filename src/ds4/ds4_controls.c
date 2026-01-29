@@ -2,53 +2,49 @@
 #include <ds4/ds4_input.h>
 #include <ds4/ds4_export.h>
 
-DS4_API int ds4_button_pressed(const ds4_state *state, const DS4_Buttons btn)
-{
-    switch (btn)
-    {
-    case DS_BTN_Square:
-        return !!(state->faceButtons & DS4_SQUARE);
-    case DS_BTN_Cross:
-        return !!(state->faceButtons & DS4_CROSS);
-    case DS_BTN_Circle:
-        return !!(state->faceButtons & DS4_CIRCLE);
-    case DS_BTN_Triangle:
-        return !!(state->faceButtons & DS4_TRIANGLE);
-    case DS_BTN_L1:
-        return state->L1;
-    case DS_BTN_R1:
-        return state->R1;
-    case DS_BTN_L2:
-        return state->L2;
-    case DS_BTN_R2:
-        return state->R2;
-    case DS_BTN_Share:
-        return state->Share;
-    case DS_BTN_Option:
-        return state->Option;
-    case DS_BTN_L3:
-        return state->L3;
-    case DS_BTN_R3:
-        return state->R3;
-    case DS_BTN_TouchPad:
-        return state->TouchPad_click;
-    default:
-        return 0;
+DS4_API int ds4_button_pressed(const ds4_state *state, const DS4_Buttons btn) {
+    switch (btn) {
+        case DS_BTN_Square:
+            return !!(state->faceButtons & DS4_SQUARE);
+        case DS_BTN_Cross:
+            return !!(state->faceButtons & DS4_CROSS);
+        case DS_BTN_Circle:
+            return !!(state->faceButtons & DS4_CIRCLE);
+        case DS_BTN_Triangle:
+            return !!(state->faceButtons & DS4_TRIANGLE);
+        case DS_BTN_L1:
+            return state->L1;
+        case DS_BTN_R1:
+            return state->R1;
+        case DS_BTN_L2:
+            return state->L2;
+        case DS_BTN_R2:
+            return state->R2;
+        case DS_BTN_Share:
+            return state->Share;
+        case DS_BTN_Option:
+            return state->Option;
+        case DS_BTN_L3:
+            return state->L3;
+        case DS_BTN_R3:
+            return state->R3;
+        case DS_BTN_TouchPad:
+            return state->TouchPad_click;
+        default:
+            return 0;
     }
 }
 
-DS4_API ds4_point ds4_left_stick(ds4_state *state)
-{
+DS4_API ds4_point ds4_left_stick(ds4_state *state) {
     return (ds4_point){
         .x = state->leftstickX,
-        .y = state->leftstickY};
+        .y = state->leftstickY
+    };
 }
 
-DS4_API int ds4_buttons_pressed(ds4_state *state, DS4_Buttons *buttons, int count)
-{
+DS4_API int ds4_buttons_pressed(ds4_state *state, DS4_Buttons *buttons, int count) {
     int mask = buttons[0];
-    for (int i = 0; i < count; i++)
-    {
+    for (int i = 0; i < count; i++) {
         mask |= buttons[i];
     }
     if ((state->faceButtons & mask) == mask)
@@ -56,47 +52,46 @@ DS4_API int ds4_buttons_pressed(ds4_state *state, DS4_Buttons *buttons, int coun
     else
         return 0;
 }
-DS4_API int ds4_btn_state(ds4_state *state)
-{
+
+DS4_API int ds4_btn_state(ds4_state *state) {
     return state->faceButtons;
 }
 
-DS4_API ds4_motion_t ds4_gyro_query(ds4_state *state)
-{
+DS4_API ds4_motion_t ds4_gyro_query(ds4_state *state) {
     return (ds4_motion_t){
         .x = state->gyroX,
         .y = state->gyroY,
-        .z = state->gyroZ};
+        .z = state->gyroZ
+    };
 }
-DS4_API ds4_motion_t ds4_accel_query(ds4_state *state)
-{
+
+DS4_API ds4_motion_t ds4_accel_query(ds4_state *state) {
     return (ds4_motion_t){
         .x = state->accelX,
         .y = state->accelY,
-        .z = state->accelZ};
+        .z = state->accelZ
+    };
 }
-DS4_API int ds4_microphone_present(ds4_state *state)
-{
+
+DS4_API int ds4_microphone_present(ds4_state *state) {
     return state->microphone;
 }
-DS4_API uint8_t ds4_battery_level(ds4_state *state)
-{
+
+DS4_API uint8_t ds4_battery_level(ds4_state *state) {
     return state->battery_level;
 }
 
-DS4_API float ds4_battery_level_percentage(ds4_state *state)
-{
+DS4_API float ds4_battery_level_percentage(ds4_state *state) {
     return (state->battery_level / 11.0f) * 100.0f;
 }
 
-DS4_API int ds4_headphones_present(ds4_state *state)
-{
+DS4_API int ds4_headphones_present(ds4_state *state) {
     return state->headphones;
 }
 
-DS4_API ds4_point ds4_right_stick(ds4_state *state)
-{
+DS4_API ds4_point ds4_right_stick(ds4_state *state) {
     return (ds4_point){
         .x = state->rightstickX,
-        .y = state->rightstickY};
+        .y = state->rightstickY
+    };
 }
