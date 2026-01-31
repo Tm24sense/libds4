@@ -1,18 +1,14 @@
 # libds4
 
-C/C++ library for reading dualshock4 4 controllers on Windows and Linux supports button input, rumble, led colors, gyro/accel data, and battery monitoring.
+C/C++ library for reading dualshock4  controllers on windows and linux supports button input, rumble, led colors, gyro/accel data, and reading battery level
 
-## Features
 
-- Polling input from a dualshock4 controller 
-- Works on windows and linux
-- CMake and xmake support
 
-## Installation & Setup
+## To use in your project
 
-### CMake with CPM
+### cmake
 
-Add to `CMakeLists.txt`:
+add to your 'CMakeLists.txt':
 
 ```cmake
 include(cmake/CPM.cmake)
@@ -29,23 +25,22 @@ target_link_libraries(my_app PRIVATE libds4::ds4pp)
 
 ### xmake(i will add a xmake repo package for libds4 in the future)
 
-Create `xmake.lua`:
+create `xmake.lua`:
 
 ```lua
 set_project("my_app")
 set_languages("c++17")
 
-include("external/libds4")
+include("external/libds4")-- or wherever you installed the repo to
 
 target("my_app")
     set_kind("binary")
     add_files("src/*.cpp")
-    add_packages("libds4")
+    add_packages("libds4") --Or add_packages("ds4pp") for c++ wrapper
 ```
 
-Then run `xmake`.
 
-## Quick Start - C++ API
+## C++ api (ds4pp)
 
 ```cpp
 #include <ds4pp/Device.hpp>
@@ -66,7 +61,7 @@ int main() {
         auto [gx, gy, gz] = controller.GetGyroData();
         std::cout << "Gyro: " << gx << ", " << gy << ", " << gz << "\n";
         
-        controller.Rumble(std::byte{200}, std::byte{100}, 
+        controller.Rumble(200, 100, 
                          std::chrono::milliseconds(50));
         controller.SetLed(255, 0, 0);
         
@@ -77,7 +72,7 @@ int main() {
 }
 ```
 
-## Quick Start - C API
+## C api (libds4)
 
 ```c
 #include <ds4/ds4.h>
@@ -107,17 +102,17 @@ int main() {
         ds4_set_led(&msg, 255, 0, 0);
         ds4_send_commands(controller, &msg);
         
-        usleep(16000);
+    
     }
     
-    ds4_destroy_handle(controller);
+    ds4_destroy_handle(controller); // always destory the handle cuz it can prevent the controller from being recognized 
     return 0;
 }
 ```
 
-## Common Tasks
+## Examples
 
-### C++ Button Input
+### C++ button input
 
 ```cpp
 controller.Update();
@@ -137,15 +132,15 @@ if (ds4_button_pressed(&state, DS_BTN_Circle)) {
 }
 ```
 
-### C++ Rumble
+### C++ Rumble/vibrating
 
 ```cpp
-controller.Rumble(std::byte{255}, std::byte{128}, 
+controller.Rumble(255 /*max*/, 255, 
                  std::chrono::milliseconds(100));
 controller.EndRumble();
 ```
 
-### C Rumble
+### C Rumble/vibrating
 
 ```c
 ds4_message msg = ds4_begin_message();
@@ -157,7 +152,7 @@ ds4_send_commands(controller, &msg);
 
 ```cpp
 controller.SetLed(255, 0, 0);  // red
-controller.EnableFlash(true);
+controller.EnableFlash(true); // You always need to enable flash before setting flash or else it wont work
 controller.SetFlash(50, 200);
 ```
 
@@ -166,11 +161,11 @@ controller.SetFlash(50, 200);
 ```c
 ds4_message msg = ds4_begin_message();
 ds4_set_led(&msg, 255, 0, 0);
-ds4_enable_flash(&msg, 50, 200, true);
+ds4_enable_flash(&msg, 50, 200, true);//same here
 ds4_send_commands(controller, &msg);
 ```
 
-### C++ Sensors
+### C++ motion sensors
 
 ```cpp
 auto [gx, gy, gz] = controller.GetGyroData();
@@ -178,7 +173,7 @@ auto [ax, ay, az] = controller.GetAccelData();
 uint8_t battery = controller.GetBatteryLevel();
 ```
 
-### C Sensors
+### C motion sensors
 
 ```c
 ds4_state state = ds4_update(controller);
@@ -190,13 +185,13 @@ uint8_t battery = state.battery_level;
 
 ## Building
 
-Clone and build with CMake:
+Clone and build with CMake also be sure to set BUILD_SHARED
 
 ```bash
 git clone https://github.com/Tm24sense/libds4.git
 cd libds4
 mkdir build && cd build
-cmake ..
+cmake .. -DBUILD_SHARED=ON
 cmake --build . --config Release
 ```
 
@@ -224,7 +219,7 @@ xmake run cpp_test
 
 ## Linux: Non-root Access
 
-On Linux, HID devices require root access by default. Setup udev rules to use without sudo:
+on Linux, hid devices require root access by default setup udev rules to use without sudo:
 
 ```bash
 sudo nano /etc/udev/rules.d/50-ds4.rules

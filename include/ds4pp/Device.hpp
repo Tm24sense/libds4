@@ -21,17 +21,17 @@ public:
               std::chrono::duration<double> duration) const;
   void EndRumble() const;
 
-  [[nodiscard]] uint8_t GetBatteryLevel() const;
-  [[nodiscard]] std::tuple<TouchPoint, TouchPoint> GetTouchPadState() const;
+  uint8_t GetBatteryLevel() const;
+  std::tuple<TouchPoint, TouchPoint> GetTouchPadState() const;
 
-  [[nodiscard]] std::tuple<int16_t, int16_t, int16_t> GetGyroData() const;
-  [[nodiscard]] std::tuple<int16_t, int16_t, int16_t> GetAccelData() const;
+  std::tuple<int16_t, int16_t, int16_t> GetGyroData() const;
+  std::tuple<int16_t, int16_t, int16_t> GetAccelData() const;
 
-  [[nodiscard]] Models GetDeviceModel() const;
+  Models GetDeviceModel() const;
 
   void SetLed(uint8_t r, uint8_t g, uint8_t b) const;
   void EnableFlash(bool enabled);
-  [[nodiscard]] bool IsFlashEnabled() const;
+  bool IsFlashEnabled() const;
   void SetFlash(uint8_t FlashDurationOn, uint8_t FlashDurationOff) const;
 
   bool SendCommandBuffer();
