@@ -217,24 +217,3 @@ xmake build -a
 xmake run cpp_test
 ```
 
-## Linux: Non-root Access
-
-on Linux, hid devices require root access by default setup udev rules to use without sudo:
-
-```bash
-sudo nano /etc/udev/rules.d/50-ds4.rules
-```
-
-Add these lines:
-
-```text
-SUBSYSTEM=="hidraw", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="05c4", MODE="0666"
-SUBSYSTEM=="hidraw", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="09cc", MODE="0666"
-```
-
-Then reload:
-
-```bash
-sudo udevadm control --reload
-sudo udevadm trigger
-```
