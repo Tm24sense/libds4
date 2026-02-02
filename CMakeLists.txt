@@ -99,22 +99,14 @@ if(BUILD_TESTS)
     target_link_libraries(touchpad_test PRIVATE ds4pp)
 endif()
 
-include(GNUInstallDirs)
-
 install(TARGETS ds4 ds4pp
     EXPORT libds4Targets
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    ARCHIVE DESTINATION lib          
+    LIBRARY DESTINATION lib           
+    RUNTIME DESTINATION bin OPTIONAL   
+    INCLUDES DESTINATION include
 )
 
-install(DIRECTORY include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-
-install(EXPORT libds4Targets
-    FILE libds4Targets.cmake
-    NAMESPACE libds4::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libds4
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ 
+    DESTINATION include
 )
