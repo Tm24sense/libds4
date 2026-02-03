@@ -39,7 +39,8 @@ if(BUILD_SHARED)
         src/ds4/ds4_controls.c
     )
     target_compile_definitions(ds4 PRIVATE DS4_BUILD_SHARED)
-    set_target_properties(ds4 PROPERTIES OUTPUT_NAME "libds4")
+    
+    
 else()
     add_library(ds4 STATIC
         src/ds4/ds4_identify.c
@@ -49,8 +50,9 @@ else()
         src/ds4/ds4_controls.c
     )
     target_compile_definitions(ds4 PUBLIC DS4_STATIC)
-    set_target_properties(ds4 PROPERTIES OUTPUT_NAME "libds4")
+    
 endif()
+
 
 target_include_directories(ds4 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -73,6 +75,13 @@ target_include_directories(ds4 PRIVATE
 add_library(ds4pp STATIC
     src/ds4pp/Device.cpp
 )
+if(WIN32)
+    set_target_properties(ds4 PROPERTIES OUTPUT_NAME "libds4")
+    set_target_properties(ds4pp PROPERTIES OUTPUT_NAME "ds4pp")
+else()
+    set_target_properties(ds4 PROPERTIES OUTPUT_NAME "ds4")
+    set_target_properties(ds4 PROPERTIES OUTPUT_NAME "ds4pp")
+endif()
 add_library(libds4::ds4 ALIAS ds4)
 add_library(libds4::ds4pp ALIAS ds4pp)
 
@@ -83,7 +92,7 @@ target_include_directories(ds4pp PUBLIC
 
 target_link_libraries(ds4pp PUBLIC ds4)
 
-set_target_properties(ds4pp PROPERTIES OUTPUT_NAME "libds4pp")
+
 
 if(BUILD_TESTS)
     add_executable(cpp_test tests/cpp_test.cpp)
