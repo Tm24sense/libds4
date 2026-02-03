@@ -4,7 +4,6 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 option(BUILD_SHARED "Build libds4 as a shared library" OFF)
 option(BUILD_TESTS "Build test executables" OFF)
 if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/cmake/CPM.cmake")
@@ -15,10 +14,8 @@ if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/cmake/CPM.cmake")
     )
 endif()
 include(cmake/CPM.cmake)
-
 set(HIDAPI_BUILD_SHARED OFF CACHE BOOL "" FORCE)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-
 CPMAddPackage(
     NAME hidapi
     GITHUB_REPOSITORY libusb/hidapi
@@ -53,7 +50,6 @@ else()
     
 endif()
 
-
 target_include_directories(ds4 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
@@ -80,7 +76,7 @@ if(WIN32)
     set_target_properties(ds4pp PROPERTIES OUTPUT_NAME "ds4pp")
 else()
     set_target_properties(ds4 PROPERTIES OUTPUT_NAME "ds4")
-    set_target_properties(ds4 PROPERTIES OUTPUT_NAME "ds4pp")
+    set_target_properties(ds4pp PROPERTIES OUTPUT_NAME "ds4pp")
 endif()
 add_library(libds4::ds4 ALIAS ds4)
 add_library(libds4::ds4pp ALIAS ds4pp)
@@ -91,8 +87,6 @@ target_include_directories(ds4pp PUBLIC
 )
 
 target_link_libraries(ds4pp PUBLIC ds4)
-
-
 
 if(BUILD_TESTS)
     add_executable(cpp_test tests/cpp_test.cpp)

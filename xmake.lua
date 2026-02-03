@@ -15,8 +15,11 @@ option("build_tests")
     set_description("Build test executables")
 option_end()
 
-target("libds4")
+target("ds4")
     add_defines("USING_XMAKE")
+    if is_plat("windows") then
+        set_basename("libds4")
+    end
     if has_config("build_shared") then
     set_kind("shared")
     add_defines("DS4_BUILD_SHARED", {private = true})
@@ -33,7 +36,7 @@ target("ds4pp")
     set_kind("static")
     add_files("src/ds4pp/Device.cpp")
     add_includedirs("include", {public = true})
-    add_deps("libds4") 
+    add_deps("ds4") 
     add_headerfiles("include/(ds4pp/*.hpp)")
 
 if has_config("build_tests") then
@@ -48,13 +51,13 @@ if has_config("build_tests") then
         set_default(false)
         set_kind("binary")
         add_files("tests/commands.c")
-        add_deps("libds4")
+        add_deps("ds4")
 
     target("debug_menu")
         set_default(false)
         set_kind("binary")
         add_files("tests/debug_menu.c")
-        add_deps("libds4")
+        add_deps("ds4")
     
     target("touchpad_test")
         set_default(false)
